@@ -10,5 +10,6 @@ namespace PetCare.Shared.Config
     {
         public required JWTConfig JWTConfig { get; set; }
         public required AdminConfig AdminConfig { get; set; }
+        public required string EmailConfirmationUrl { get; set; }
     }
 }

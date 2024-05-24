@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using PetCare.Server.Middleware;
+using PetCare.BusinessLogic.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +63,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -76,6 +80,33 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
         throw new Exception("Cannot initialize dbContext");
     }
     petDbContext.Database.Migrate();
+    var adminRole = petDbContext.Roles.FirstOrDefault(r => r.Name == "Admin");
+    if (adminRole == null)
+    {
+        petDbContext.Roles.Add(new IdentityRole()
+        {
+            Name = "Admin",
+            NormalizedName = "ADMIN",
+            ConcurrencyStamp = "1"
+        });
+    }
+    var userRole = petDbContext.Roles.FirstOrDefault(r => r.Name == "User");
+    if (userRole == null)
+    {
+        petDbContext.Roles.Add(new IdentityRole()
+        {
+            Name = "User",
+            NormalizedName = "USER",
+            ConcurrencyStamp = "2"
+        });
+    }
+    petDbContext.SaveChanges();
+}
+
+using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+{
+    scope.ServiceProvider.GetService<IAuthService>()
+        ?.RegisterAdmin(appSettings.AdminConfig.Password, appSettings.AdminConfig.Email).Wait();
 }
 
 app.Run();
