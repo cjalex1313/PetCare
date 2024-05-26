@@ -6,6 +6,7 @@ using PetCare.DataAccess;
 using PetCare.Email;
 using PetCare.Shared.Common;
 using PetCare.Shared.Config;
+using PetCare.Shared.DTOs.Auth;
 using PetCare.Shared.Entities.Auth;
 using PetCare.Shared.Exceptions;
 using PetCare.Shared.Exceptions.Auth;
@@ -33,7 +34,7 @@ namespace PetCare.BusinessLogic.Services
         Task<string> RefreshAccessToken(string username, string refreshToken);
         Task<IList<IdentityUser>> GetUsers();
         Task ConfirmEmail(Guid userId, string token);
-
+        Task RegisterUser(RegisterRequest registerRequest);
     }
     internal class AuthService : IAuthService
     {
@@ -298,6 +299,25 @@ namespace PetCare.BusinessLogic.Services
                     ErrorMessage = result != null ? String.Join(". ", result.Errors.Select(e => e.Description).ToList()) : "Error while confirming email via confirmation token"
                 };
             }
+        }
+
+        public async Task RegisterUser(RegisterRequest registerRequest)
+        {
+            var email = registerRequest.Email;
+            var username = registerRequest.Username;
+            var password = registerRequest.Password;
+            var user = await _userManager.FindByNameAsync(username);
+            if (user != null)
+            {
+                throw new UsernameAlreadyExistsException(username);
+            }
+            user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                throw new EmailAlreadyExistsException(email);
+            }
+            var identityAdmin = await AddUser(username, email, password);
+            await AddRoleToUser(identityAdmin, Roles.User);
         }
     }
 }

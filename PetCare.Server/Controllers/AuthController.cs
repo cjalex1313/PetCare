@@ -37,6 +37,16 @@ namespace PetCare.Server.Controllers
             return Ok(response);
         }
 
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
+        {
+            await _authService.RegisterUser(registerRequest);
+            return Ok(new BaseResponse()
+            {
+                Succeeded = true
+            });
+        }
+
         [HttpPost("Confirmation")]
         public async Task<IActionResult> EmailConfirmation([FromBody] EmailValidationRequest request)
         {
