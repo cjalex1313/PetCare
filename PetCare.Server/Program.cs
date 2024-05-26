@@ -106,7 +106,7 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
 using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
     scope.ServiceProvider.GetService<IAuthService>()
-        ?.RegisterAdmin(appSettings.AdminConfig.Password, appSettings.AdminConfig.Email).Wait();
+        ?.EnsureAdminExists().Wait();
 }
 
 app.Run();

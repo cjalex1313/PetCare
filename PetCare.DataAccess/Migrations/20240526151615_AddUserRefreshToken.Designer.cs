@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetCare.DataAccess;
@@ -11,9 +12,11 @@ using PetCare.DataAccess;
 namespace PetCare.DataAccess.Migrations
 {
     [DbContext(typeof(PetDbContext))]
-    partial class PetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240526151615_AddUserRefreshToken")]
+    partial class AddUserRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
