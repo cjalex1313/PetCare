@@ -36,9 +36,7 @@ builder.Services.AddAuthentication(options =>
     }
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
     {
-        ValidateAudience = true,
         ValidateIssuer = true,
-        ValidAudience = appSettings.JWTConfig.ValidAudience,
         ValidIssuer = appSettings.JWTConfig.ValidIssuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
     };

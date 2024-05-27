@@ -24,7 +24,7 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest loginRequest)
         {
             var token = await _authService.Login(loginRequest.Username, loginRequest.Password);
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
@@ -38,7 +38,7 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
+        public async Task<ActionResult<BaseResponse>> Register([FromBody] RegisterRequest registerRequest)
         {
             await _authService.RegisterUser(registerRequest);
             return Ok(new BaseResponse()
@@ -48,7 +48,7 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpPost("Confirmation")]
-        public async Task<IActionResult> EmailConfirmation([FromBody] EmailValidationRequest request)
+        public async Task<ActionResult<BaseResponse>> EmailConfirmation([FromBody] EmailValidationRequest request)
         {
             var decodedToken = Base64UrlEncoder.Decode(request.Token);
             await _authService.ConfirmEmail(request.UserId, decodedToken);
@@ -57,7 +57,7 @@ namespace PetCare.Server.Controllers
 
         [HttpGet("Users")]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> GetUsers()
+        public async Task<ActionResult<GetUsersResponse>> GetUsers()
         {
             var users = await _authService.GetUsers();
             var userDTOs = users.Select(u =>
@@ -72,7 +72,7 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpPost("Refresh")]
-        public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
+        public async Task<ActionResult<LoginResponse>> Refresh([FromBody] RefreshRequest refreshRequest)
         {
             var username = _authService.GetUsernameFromExpiredToken(refreshRequest.AccessToken);
             string newAccessToken = await _authService.RefreshAccessToken(username, refreshRequest.RefreshToken);
