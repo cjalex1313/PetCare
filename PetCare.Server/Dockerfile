@@ -17,7 +17,6 @@ FROM with-node AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["PetCare.Server/PetCare.Server.csproj", "PetCare.Server/"]
-COPY ["petcare.client/petcare.client.esproj", "petcare.client/"]
 RUN dotnet restore "./PetCare.Server/PetCare.Server.csproj"
 COPY . .
 WORKDIR "/src/PetCare.Server"
