@@ -113,8 +113,7 @@ namespace PetCare.BusinessLogic.Services
             }
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
             var token = new JwtSecurityToken(
-                issuer: _appSettings.JWTConfig.ValidIssuer,
-                expires: DateTime.Now.AddMinutes(10),
+                expires: DateTime.Now.AddHours(10),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );

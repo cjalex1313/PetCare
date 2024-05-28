@@ -73,3 +73,7 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+NUXT .env
+PETCARE_API_URL=https://localhost:7287/api
+NODE_TLS_REJECT_UNAUTHORIZED=0

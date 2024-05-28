@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetCare.Shared.Common;
 
 namespace PetCare.Server.Controllers
 {
@@ -20,6 +22,19 @@ namespace PetCare.Server.Controllers
 
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
+        {
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
+
+        [HttpGet("Secure")]
+        [Authorize(Roles = Roles.Admin)]
+        public IEnumerable<WeatherForecast> GetSecure()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

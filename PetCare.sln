@@ -5,8 +5,6 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCare.Server", "PetCare.Server\PetCare.Server.csproj", "{8DCD8A60-4BAB-4CC2-98D2-1C108DF3C50B}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "petcare.client", "petcare.client\petcare.client.esproj", "{9427BA0B-6638-4E50-9BAC-15CACAA426EC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCare.Shared", "PetCare.Shared\PetCare.Shared.csproj", "{940945E1-D5C2-4B86-8DE7-00770A01333E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCare.DataAccess", "PetCare.DataAccess\PetCare.DataAccess.csproj", "{D9C1E57C-9928-4ACE-82B1-113BC1465EFB}"
@@ -15,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCare.BusinessLogic", "Pe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{0B0D843C-17FB-4A20-A412-4E7478DB6D98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCare.Email", "PetCare.Email\PetCare.Email.csproj", "{191322B4-FBBD-4CFA-9F89-3979DE8A4966}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCare.Email", "PetCare.Email\PetCare.Email.csproj", "{191322B4-FBBD-4CFA-9F89-3979DE8A4966}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,12 +25,6 @@ Global
 		{8DCD8A60-4BAB-4CC2-98D2-1C108DF3C50B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DCD8A60-4BAB-4CC2-98D2-1C108DF3C50B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DCD8A60-4BAB-4CC2-98D2-1C108DF3C50B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9427BA0B-6638-4E50-9BAC-15CACAA426EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9427BA0B-6638-4E50-9BAC-15CACAA426EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9427BA0B-6638-4E50-9BAC-15CACAA426EC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{9427BA0B-6638-4E50-9BAC-15CACAA426EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9427BA0B-6638-4E50-9BAC-15CACAA426EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9427BA0B-6638-4E50-9BAC-15CACAA426EC}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{940945E1-D5C2-4B86-8DE7-00770A01333E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{940945E1-D5C2-4B86-8DE7-00770A01333E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{940945E1-D5C2-4B86-8DE7-00770A01333E}.Release|Any CPU.ActiveCfg = Release|Any CPU
