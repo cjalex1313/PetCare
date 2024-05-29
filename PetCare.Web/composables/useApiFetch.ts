@@ -12,6 +12,9 @@ export function useApiFetch<T>(
   }
   return useFetch(url, {
     ...options,
-    headers
+    headers,
+    async onResponseError({request, response, options}) {
+      console.log(response)
+    }
   })
 }
