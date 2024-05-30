@@ -33,7 +33,7 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpGet("Secure")]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize]
         public IEnumerable<WeatherForecast> GetSecure()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

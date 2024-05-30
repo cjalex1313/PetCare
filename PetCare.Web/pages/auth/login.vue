@@ -2,6 +2,9 @@
   <div>
     <div>Login</div>
     <div>
+      <nuxt-link to="/">Home</nuxt-link>
+    </div>
+    <div>
       <label
         for="username"
         class="block text-sm font-medium leading-6 text-gray-900"
@@ -51,6 +54,9 @@
 import { reactive } from "vue";
 import { login } from "~/api-services/authService";
 
+const router = useRouter();
+const userStore = useUserStore();
+
 const loginData = reactive({
   username: "",
   password: "",
@@ -58,5 +64,9 @@ const loginData = reactive({
 
 const tryLogin = async () => {
   const data = await login(loginData.username, loginData.password);
+  if (data.succeeded == true) {
+    userStore.setIsLoggedIn(true);
+    router.push("/");
+  }
 };
 </script>

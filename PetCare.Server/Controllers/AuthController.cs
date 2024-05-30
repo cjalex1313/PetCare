@@ -7,8 +7,10 @@ using PetCare.Shared.Common;
 using PetCare.Shared.DTOs;
 using PetCare.Shared.DTOs.Auth;
 using PetCare.Shared.Entities.Auth;
+using PetCare.Shared.Exceptions;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace PetCare.Server.Controllers
 {
@@ -53,6 +55,27 @@ namespace PetCare.Server.Controllers
             var decodedToken = Base64UrlEncoder.Decode(request.Token);
             await _authService.ConfirmEmail(request.UserId, decodedToken);
             return Ok(new BaseResponse());
+        }
+
+        [HttpGet("Profile")]
+        [Authorize]
+        public ActionResult<UserProfile> GetUserProfile()
+        {
+            if (User == null || User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return Unauthorized();
+            }
+            var username = User.Identity.Name;
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (email == null || username == null) {
+                throw new BaseException("Token does not contain username and email claims"); ;
+            }
+            var response = new UserProfile()
+            {
+                Email = email,
+                Username = username
+            };
+            return Ok(response);
         }
 
         [HttpGet("Users")]

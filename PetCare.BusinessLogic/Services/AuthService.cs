@@ -143,7 +143,10 @@ namespace PetCare.BusinessLogic.Services
             {
                 authClaims.Add(new Claim(ClaimTypes.Role, role));
             }
-
+            if (user.Email != null)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Email, user.Email));
+            }
             var token = GetToken(authClaims);
             return token;
         }
@@ -268,8 +271,12 @@ namespace PetCare.BusinessLogic.Services
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
+            if (user.Email != null)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Email, user.Email));
+            }
             var userRoles = await _userManager.GetRolesAsync(user);
             foreach (var role in userRoles)
             {
