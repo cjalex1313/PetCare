@@ -9,9 +9,6 @@
       <button @click="tryGetWeather">Get Weather</button>
       <button @click="tryGetWeatherSecure">Get Secure Weather</button>
     </div>
-    <div v-if="data">
-      {{ data.length }}
-    </div>
   </div>
 </template>
 
@@ -29,5 +26,4 @@ const tryGetWeatherSecure = async () => {
   const data = await getSecureAuthWeather();
   console.log(data);
 };
-const data = await getWeather();
 </script>
