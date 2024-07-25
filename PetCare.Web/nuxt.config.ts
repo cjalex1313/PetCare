@@ -20,7 +20,10 @@ export default defineNuxtConfig({
     /* Configuration */
     options: {
       theme: {
-          preset: Aura
+          preset: Aura,
+          options: {
+            darkModeSelector: '.my-app-dark',
+          }
       }
     }
   },
