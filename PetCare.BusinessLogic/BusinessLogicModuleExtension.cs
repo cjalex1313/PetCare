@@ -13,6 +13,7 @@ namespace PetCare.BusinessLogic
             services.AddDataAccess(configuration);
             services.AddEmailModule(configuration);
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IPetService, PetService>();
         }
     }
 }
