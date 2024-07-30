@@ -17,7 +17,7 @@ public class PetsController : BaseController
         this._petService = petService;
     }
 
-    [HttpGet()]
+    [HttpGet]
     public ActionResult<GetUserPetsResponse> GetUserPets()
     {
         var userId = this.GetUserId().ToString();
