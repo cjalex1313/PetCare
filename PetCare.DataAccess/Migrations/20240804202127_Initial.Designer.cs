@@ -12,8 +12,8 @@ using PetCare.DataAccess;
 namespace PetCare.DataAccess.Migrations
 {
     [DbContext(typeof(PetDbContext))]
-    [Migration("20240728201336_AddPets")]
-    partial class AddPets
+    [Migration("20240804202127_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -245,7 +245,7 @@ namespace PetCare.DataAccess.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("date");
 
                     b.Property<string>("Name")
                         .IsRequired()

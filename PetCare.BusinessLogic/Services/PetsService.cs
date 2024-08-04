@@ -27,7 +27,7 @@ public class PetService : IPetService
             DateOfBirth = p.DateOfBirth,
             PetType = MapPetType(p.GetType())
         }).ToList();
-        return result;
+        return result ?? new List<PetDTO>();
     }
 
     private static PetType MapPetType(Type type)

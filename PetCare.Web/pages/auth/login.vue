@@ -66,7 +66,7 @@ const tryLogin = async () => {
   const data = await login(loginData.username, loginData.password);
   if (data.succeeded == true) {
     userStore.setIsLoggedIn(true);
-    router.push("/");
+    router.push("/dashboard");
   }
 };
 </script>

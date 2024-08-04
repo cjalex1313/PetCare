@@ -11,4 +11,9 @@ namespace PetCare.Shared.DTOs
         public bool Succeeded { get; set; } = true;
         public string? Error { get; set; } = null;
     }
+
+    public class BaseResponseWithData<T> : BaseResponse
+    {
+        public T? Data { get; set; }
+    }
 }

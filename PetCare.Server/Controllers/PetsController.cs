@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetCare.BusinessLogic.Services;
+using PetCare.Shared.DTOs;
 using PetCare.Shared.DTOs.Pets;
 
 namespace PetCare.Server.Controllers;
@@ -18,11 +19,14 @@ public class PetsController : BaseController
     }
 
     [HttpGet]
-    public ActionResult<GetUserPetsResponse> GetUserPets()
+    public ActionResult<BaseResponseWithData<IEnumerable<PetDTO>>> GetUserPets()
     {
         var userId = this.GetUserId();
         var pets = _petService.GetUserPets(userId);
-        var response = new GetUserPetsResponse(pets);
+        var response = new BaseResponseWithData<IEnumerable<PetDTO>>()
+        {
+            Data = pets
+        };
         return Ok(response);
     }
 }

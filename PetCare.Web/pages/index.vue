@@ -18,6 +18,9 @@ definePageMeta({
 });
 import { getWeather, getSecureAuthWeather } from "~/api-services/watherService";
 
+const jwt = useCookie("jwt");
+const router = useRouter();
+
 const tryGetWeather = async () => {
   const data = await getWeather();
   console.log(data);
@@ -26,4 +29,8 @@ const tryGetWeatherSecure = async () => {
   const data = await getSecureAuthWeather();
   console.log(data);
 };
+
+if (jwt.value) {
+  router.push("/dashboard");
+}
 </script>

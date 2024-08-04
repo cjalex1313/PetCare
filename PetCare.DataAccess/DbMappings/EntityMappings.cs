@@ -25,6 +25,7 @@ public static class EntityMappings
         entity.ToTable("Pets");
         entity.HasKey(e => e.Id);
         entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
+        entity.Property(e => e.DateOfBirth).HasColumnType("date");
         entity.HasOne<IdentityUser>().WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
         entity.HasIndex(e => e.UserId);
     }
