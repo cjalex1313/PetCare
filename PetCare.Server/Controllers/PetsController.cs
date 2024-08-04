@@ -20,7 +20,7 @@ public class PetsController : BaseController
     [HttpGet]
     public ActionResult<GetUserPetsResponse> GetUserPets()
     {
-        var userId = this.GetUserId().ToString();
+        var userId = this.GetUserId();
         var pets = _petService.GetUserPets(userId);
         var response = new GetUserPetsResponse(pets);
         return Ok(response);

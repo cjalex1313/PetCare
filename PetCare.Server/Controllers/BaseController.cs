@@ -6,16 +6,14 @@ namespace PetCare.Server.Controllers
 {
     public abstract class BaseController : ControllerBase
     {
-        protected Guid GetUserId()
+        protected string GetUserId()
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Guid userId;
-            var userIdOk = Guid.TryParse(userIdString, out userId);
-            if (!userIdOk)
+            if (userIdString == null)
             {
                 throw new UserIdIncorrectException(userIdString ?? "");
             }
-            return userId;
+            return userIdString;
         }
     }
 }
