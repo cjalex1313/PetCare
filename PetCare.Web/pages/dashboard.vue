@@ -17,5 +17,5 @@ const loadData = async () => {
   pets.value.push(...petsResponse);
 };
 
-loadData();
+await loadData();
 </script>

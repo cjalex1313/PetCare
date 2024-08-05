@@ -1,7 +1,7 @@
 import type { UseFetchOptions } from "#app"
 
 
-export function useApiFetch<T>(
+export async function useApiFetch<T>(
   url: string | (() => string),
   options: UseFetchOptions<T> = {}
 ) {
@@ -10,7 +10,7 @@ export function useApiFetch<T>(
     ...options.headers,
     authorization: `Bearer ${jwt.value}`
   }
-  return useFetch(url, {
+  return await useFetch(url, {
     ...options,
     headers,
     async onResponseError({request, response, options}) {

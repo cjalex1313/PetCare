@@ -17,8 +17,15 @@ export interface PetDTO {
 
 export const getPets = async (): Promise<PetDTO[]> => {
     const apiUrl = useRuntimeConfig().public.apiBaseUrl;
-    const {data, error} = await useApiFetch<BaseResponseWithData<PetDTO[]>>(`${apiUrl}/Pets`, {
-        method: "GET",
-      });
-    return data.value?.data ?? [];
+    if (import.meta.client) {
+        const { data } = await useApiFetchClient<BaseResponseWithData<PetDTO[]>>(`${apiUrl}/Pets`, {
+            method: "GET",
+          });
+        return data?.data ?? [];
+    } else {
+        const {data, error} = await useApiFetch<BaseResponseWithData<PetDTO[]>>(`${apiUrl}/Pets`, {
+            method: "GET",
+          });
+        return data.value?.data ?? [];
+    }
 }
