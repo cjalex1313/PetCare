@@ -1,5 +1,5 @@
 
-export async function useApiFetchClient<T>(url: string, options: any) {
+export async function useApiFetchClient<T>(url: string, options: any) : Promise<{data: any, error: any}> {
   const jwt = useCookie('jwt');
   const headers = {
     ...options.headers,

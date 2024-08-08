@@ -29,37 +29,38 @@ export const login = async (username: string, password: string) => {
   const jwt = useCookie('jwt')
   const refreshToken = useCookie('refreshToken')
   const apiUrl = useRuntimeConfig().public.apiBaseUrl;
-  const {data, error} = await useApiFetch<LoginResponse>(`${apiUrl}/Auth/Login`, {
+  const {data, error} = await useApiFetchClient<LoginResponse>(`${apiUrl}/Auth/Login`, {
     method: "POST",
     body: {
       username,
       password
     }
   });
-  if (error.value) {
+  console.log(data);
+  if (error?.value) {
     throw new Error(error.value.message);
   }
-  if (!data.value) {
+  if (!data) {
     throw new Error("Invalid response");
   }
-  jwt.value = data.value.accessToken
-  refreshToken.value = data.value.refreshToken
-  return data.value
+  jwt.value = data.accessToken
+  refreshToken.value = data.refreshToken
+  return data
 }
 
 export const register = async (request: RegisterRequest) => {
   const apiUrl = useRuntimeConfig().public.apiBaseUrl;
-  const {data, error} = await useApiFetch<BaseResponse>(`${apiUrl}/Auth/Register`, {
+  const {data, error} = await useApiFetchClient<BaseResponse>(`${apiUrl}/Auth/Register`, {
     method: "POST",
     body: request
   });
-  if (error.value) {
+  if (error?.value) {
     throw new Error(error.value.message);
   }
-  if (!data.value) {
+  if (!data) {
     throw new Error("Invalid response");
   }
-  return data.value
+  return data
 }
 
 export const validateEmail = async (request: EmailValidationRequest) => {
@@ -79,14 +80,29 @@ export const validateEmail = async (request: EmailValidationRequest) => {
 
 export const getProfile = async (): Promise<UserProfile> => {
   const apiUrl = useRuntimeConfig().public.apiBaseUrl;
-  const {data, error} = await useApiFetch<UserProfile>(`${apiUrl}/Auth/Profile`, {
-    method: "GET"
-  });
-  if (error.value) {
-    throw new Error(error.value.message);
+  if (import.meta.client) { 
+    const {data, error} = await useApiFetchClient<UserProfile>(`${apiUrl}/Auth/Profile`, {
+      method: "GET"
+    });
+    if (error?.value) {
+      throw new Error(error.value.message);
+    }
+    if (!data) {
+      throw new Error("Invalid response");
+    }
+    return data
   }
-  if (!data.value) {
-    throw new Error("Invalid response");
+  else {
+    const {data, error} = await useApiFetch<UserProfile>(`${apiUrl}/Auth/Profile`, {
+      method: "GET"
+    });
+    if (error.value) {
+      throw new Error(error.value.message);
+    }
+    if (!data.value) {
+      throw new Error("Invalid response");
+    }
+    return data.value
   }
-  return data.value
+  
 }
