@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:petcare_mobile/auth/authProvider.dart';
+import 'package:petcare_mobile/auth/login_screen.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -10,8 +14,11 @@ final theme = ThemeData(
   textTheme: GoogleFonts.latoTextTheme(),
 );
 
-void main() {
-  runApp(const App());
+void main() async {
+  await dotenv.load(fileName: ".env");
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  runApp(const ProviderScope(child: App()));
 }
 
 class App extends StatelessWidget {
@@ -21,7 +28,33 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: theme,
-      home: const Placeholder(),// Todo ...,
+      home: AuthWrapper(), // Todo ...,
+    );
+  }
+}
+
+class AuthWrapper extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authStateAsyncValue = ref.watch(authStateProvider);
+
+    return authStateAsyncValue.when(
+      data: (isAuthenticated) {
+        FlutterNativeSplash.remove();
+        if (isAuthenticated) {
+          return const Placeholder();
+        } else {
+          return LoginScreen();
+        }
+      },
+      loading: () {
+        // While loading, we want to keep showing the native splash screen
+        return Container(
+          color: Colors
+              .transparent, // Transparent so that the native splash remains visible
+        );
+      },
+      error: (error, stack) => Center(child: Text('Error: $error')),
     );
   }
 }

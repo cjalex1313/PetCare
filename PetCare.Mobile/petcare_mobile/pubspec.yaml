@@ -37,6 +37,12 @@ dependencies:
   cupertino_icons: ^1.0.6
   google_fonts: ^6.2.1
   flutter_native_splash: ^2.4.1
+  riverpod: ^2.5.1
+  flutter_riverpod: ^2.5.1
+  flutter_dotenv: ^5.1.0
+  http_interceptor: ^2.0.0
+  flutter_secure_storage: ^9.2.2
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
