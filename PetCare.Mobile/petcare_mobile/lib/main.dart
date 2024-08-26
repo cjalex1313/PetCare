@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:petcare_mobile/auth/authProvider.dart';
+import 'package:petcare_mobile/auth/authStore.dart';
 import 'package:petcare_mobile/auth/login_screen.dart';
+import 'package:petcare_mobile/helpers/http/http_overrides.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -16,6 +19,7 @@ final theme = ThemeData(
 
 void main() async {
   await dotenv.load(fileName: ".env");
+  HttpOverrides.global = PetHttpOverrides();
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const ProviderScope(child: App()));

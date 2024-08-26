@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/src/base_request.dart';
-import 'package:http/src/base_response.dart';
+import 'package:http/http.dart';
 import 'package:http_interceptor/models/interceptor_contract.dart';
 
 class AuthInterceptor implements InterceptorContract {
