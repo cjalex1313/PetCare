@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:petcare_mobile/auth/authStore.dart';
 import 'package:petcare_mobile/auth/login_screen.dart';
+import 'package:petcare_mobile/dashboard/dashboard_screen.dart';
 import 'package:petcare_mobile/helpers/http/http_overrides.dart';
 
 final theme = ThemeData(
@@ -46,7 +47,7 @@ class AuthWrapper extends ConsumerWidget {
       data: (isAuthenticated) {
         FlutterNativeSplash.remove();
         if (isAuthenticated) {
-          return const Placeholder();
+          return DashboardScreen();
         } else {
           return LoginScreen();
         }

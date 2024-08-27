@@ -27,8 +27,6 @@ class AuthStore {
     catch (e) {
       _isAuthenticated = false;
     }
-    // e.g., check token or session here
-    // _isAuthenticated = true; // or false depending on your logic
   }
 }
 

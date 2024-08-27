@@ -1,0 +1,4 @@
+class BaseError {
+  // errorMessage
+  // statusCode
+}
