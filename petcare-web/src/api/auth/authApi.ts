@@ -1,7 +1,7 @@
 import { useBaseApi } from "../baseApi";
-import type { BaseResponse } from "../models/baseResponse";
-import type { LoginResult } from "./models/loginResult";
-import type { Profile } from "./models/profile";
+import type { BaseResponse } from "../../types/baseResponse";
+import type { LoginResult } from "../../types/loginResult";
+import type { Profile } from "../../types/profile";
 
 export function useAuthApi() {
     var { baseApi } = useBaseApi();
