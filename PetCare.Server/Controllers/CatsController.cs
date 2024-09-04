@@ -23,6 +23,6 @@ public class CatsController : BaseController
     {
         var userId = GetUserId();
         var result = _catsService.AddCat(new CatDTO { Name = request.Name, DateOfBirth = request.DateOfBirth }, userId);
-        return Ok(new BaseResponseWithData<CatDTO> { Data = result });
+        return Ok(new BaseResponseWithData<CatDTO>(result));
     }
 }

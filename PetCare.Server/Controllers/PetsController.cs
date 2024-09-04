@@ -23,10 +23,7 @@ public class PetsController : BaseController
     {
         var userId = this.GetUserId();
         var pets = _petService.GetUserPets(userId);
-        var response = new BaseResponseWithData<IEnumerable<PetDTO>>()
-        {
-            Data = pets
-        };
+        var response = new BaseResponseWithData<IEnumerable<PetDTO>>(pets);
         return Ok(response);
     }
 }

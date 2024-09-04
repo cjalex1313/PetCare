@@ -14,6 +14,13 @@ namespace PetCare.Shared.DTOs
 
     public class BaseResponseWithData<T> : BaseResponse
     {
+        public BaseResponseWithData(T data)
+        {
+            Succeeded = true;
+            Error = null;
+            Data = data;
+        }
+
         public T? Data { get; set; }
     }
 }

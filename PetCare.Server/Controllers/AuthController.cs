@@ -26,12 +26,12 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest loginRequest)
+        public async Task<ActionResult<LoginResult>> Login([FromBody] LoginRequest loginRequest)
         {
             var token = await _authService.Login(loginRequest.Username, loginRequest.Password);
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
             var refreshToken = await _authService.GenerateRefreshToken(loginRequest.Username);
-            var response = new LoginResponse()
+            LoginResult response = new LoginResult()
             {
                 AccessToken = tokenString,
                 RefreshToken = refreshToken
@@ -95,11 +95,11 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpPost("Refresh")]
-        public async Task<ActionResult<LoginResponse>> Refresh([FromBody] RefreshRequest refreshRequest)
+        public async Task<ActionResult<LoginResult>> Refresh([FromBody] RefreshRequest refreshRequest)
         {
             var username = _authService.GetUsernameFromExpiredToken(refreshRequest.AccessToken);
             string newAccessToken = await _authService.RefreshAccessToken(username, refreshRequest.RefreshToken);
-            return Ok(new LoginResponse()
+            return Ok(new LoginResult()
             {
                 AccessToken = newAccessToken,
                 RefreshToken = refreshRequest.RefreshToken
