@@ -39,7 +39,7 @@ const loginData = reactive({
 const tryLogin = async () => {
   const response = await authApi.login(loginData.username, loginData.password)
   if (response.accessToken) {
-    userStore.setUserAccessToken(response.accessToken);
+    await userStore.setUserAccessToken(response.accessToken);
   }
   router.push('/')
 }

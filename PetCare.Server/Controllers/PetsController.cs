@@ -11,19 +11,18 @@ namespace PetCare.Server.Controllers;
 [ApiController]
 public class PetsController : BaseController
 {
-    private readonly IPetService _petService;
+  private readonly IPetService _petService;
 
-    public PetsController(IPetService petService)
-    {
-        this._petService = petService;
-    }
+  public PetsController(IPetService petService)
+  {
+    this._petService = petService;
+  }
 
-    [HttpGet]
-    public ActionResult<BaseResponseWithData<IEnumerable<PetDTO>>> GetUserPets()
-    {
-        var userId = this.GetUserId();
-        var pets = _petService.GetUserPets(userId);
-        var response = new BaseResponseWithData<IEnumerable<PetDTO>>(pets);
-        return Ok(response);
-    }
+  [HttpGet]
+  public ActionResult<IEnumerable<PetDTO>> GetUserPets()
+  {
+    var userId = this.GetUserId();
+    var pets = _petService.GetUserPets(userId);
+    return Ok(pets);
+  }
 }
