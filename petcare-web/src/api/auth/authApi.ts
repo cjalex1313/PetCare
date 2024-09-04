@@ -1,9 +1,11 @@
-import baseApi from "../baseApi";
+import { useBaseApi } from "../baseApi";
 import type { BaseResponse } from "../models/baseResponse";
 import type { LoginResult } from "./models/loginResult";
+import type { Profile } from "./models/profile";
 
-export default {
-    login: async (username: string, password: string): Promise<LoginResult> => {
+export function useAuthApi() {
+    var { baseApi } = useBaseApi();
+    const login = async (username: string, password: string): Promise<LoginResult> => {
         try {
             const response = await baseApi.post<LoginResult>('/Auth/Login', {
                 username,
@@ -13,8 +15,8 @@ export default {
         } catch (e) {
             throw e;
         }
-    },
-    register: async (username: string, password: string, email: string): Promise<BaseResponse> => {
+    };
+    const register = async (username: string, password: string, email: string): Promise<BaseResponse> => {
         try {
             const response = await baseApi.post<BaseResponse>('/Auth/Register', {
                 username,
@@ -25,5 +27,28 @@ export default {
         } catch (e) {
             throw e;
         }
-    }
+    };
+    const confirmAccount = async (userId: string, token: string): Promise<BaseResponse> => {
+        try {
+            const response = await baseApi.post('/Auth/Confirmation', {
+                userId,
+                token
+            });
+            return response.data;
+        }
+        catch (e) {
+            throw e;
+        }
+    };
+    const getProfile = async (): Promise<Profile> => {
+        try {
+            const response = await baseApi.get<Profile>('/Auth/Profile');
+            return response.data;
+        }
+        catch (e) {
+            throw e;
+        }
+    };
+
+    return { login, register, confirmAccount, getProfile }
 }
