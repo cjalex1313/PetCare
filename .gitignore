@@ -273,4 +273,3 @@ __pycache__/
 
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore
 PetCare.Server/appsettings.Development.json
-PetCare.Mobile/petcare/.env
