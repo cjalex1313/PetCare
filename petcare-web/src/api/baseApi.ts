@@ -34,7 +34,7 @@ export function useBaseApi() {
       }
       if (error.response?.data?.error) {
         const message = error.response.data.error
-        toast.add({ severity: 'error', summary: 'Login failed', detail: message, life: 3000 })
+        toast.add({ severity: 'error', summary: 'Unauthorized ', detail: message, life: 3000 })
       }
       return Promise.reject(error)
     }
