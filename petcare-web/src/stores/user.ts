@@ -1,14 +1,16 @@
 import { useAuthApi } from '@/api/auth/authApi'
 import type { Profile } from '@/types/profile'
 import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 export const useUserStore = defineStore('user', () => {
   const router = useRouter()
   const authApi = useAuthApi()
+  const token: Ref<string|null> = ref(localStorage.getItem('JWT'))
+  const isLoggedIn:ComputedRef<boolean> = computed(() => !!token.value)
 
-  const userJwt = ref<string>('')
   const profile = reactive<Profile>({
     username: '',
     email: ''
@@ -16,7 +18,7 @@ export const useUserStore = defineStore('user', () => {
 
   async function setUserAccessToken(accessToken: string) {
     if (accessToken) {
-      userJwt.value = accessToken
+      token.value = accessToken
       localStorage.setItem('JWT', accessToken)
       const profileObj = await authApi.getProfile()
       profile.email = profileObj.email
@@ -27,7 +29,7 @@ export const useUserStore = defineStore('user', () => {
   async function initialize() {
     const jwt = localStorage.getItem('JWT')
     if (jwt != null) {
-      userJwt.value = jwt
+      token.value = jwt
       const profileObj = await authApi.getProfile()
       profile.email = profileObj.email
       profile.username = profileObj.username
@@ -36,5 +38,17 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  return { userJwt, profile, setUserAccessToken, initialize }
+  const destroySession = (): void => {
+    token.value = null;
+    localStorage.removeItem('token');
+  };
+
+  return { 
+    token, 
+    profile, 
+    setUserAccessToken, 
+    initialize, 
+    isLoggedIn, 
+    destroySession 
+  }
 })
