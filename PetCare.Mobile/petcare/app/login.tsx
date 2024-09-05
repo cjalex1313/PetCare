@@ -30,6 +30,7 @@ export default function LoginScreen() {
       <View marginT-150 paddingH-30>
         <Text text30 center marginT-50>Sign In</Text>
         <TextField
+          autoCapitalize="none"
           placeholder={'Username'}
           floatingPlaceholder
           preset="underline"
@@ -38,6 +39,7 @@ export default function LoginScreen() {
         />
         <TextField
           placeholder={'Password'}
+          autoCapitalize="none"
           floatingPlaceholder
           preset="underline"
           secureTextEntry
