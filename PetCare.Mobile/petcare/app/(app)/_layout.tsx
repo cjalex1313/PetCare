@@ -9,6 +9,10 @@ export default function AppLayout() {
   if (!isLoggedIn) {
     return <Redirect href="/login" />;
   }
-  
-  return <Stack />;
+
+  return <Stack>
+    <Stack.Screen name="index" options={{
+      title: 'Home'
+    }} />
+  </Stack>;
 }

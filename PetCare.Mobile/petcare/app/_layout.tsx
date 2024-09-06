@@ -10,22 +10,26 @@ SplashScreen.preventAutoHideAsync();
 
 const LayoutImpl = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     const getJWT = async () => {
       const token = await AsyncStorage.getItem('JWT');
       dispatch(setIsLoggedIn(!!token))
+      if (!!token) {
+        router.replace('/(app)');
+      }
       SplashScreen.hideAsync();
     }
     getJWT()
   }, []);
-  return <Slot/>
+  return <Slot />
 }
 
 export default function Layout() {
 
 
   return <Provider store={store}>
-    <LayoutImpl/>
+    <LayoutImpl />
   </Provider>;
 }

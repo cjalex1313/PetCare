@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '@/store/store';
 import { increment } from '@/store/counter';
 
-export default function IndexScreen() {
+export default function HomeScreen() {
 
   const count = useSelector<IRootState, number>((state) => state.counter.value)
   const dispatch = useDispatch()
