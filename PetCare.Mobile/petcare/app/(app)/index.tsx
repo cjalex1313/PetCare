@@ -1,31 +1,30 @@
-import React from 'react';
-import { View, Text, Button } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import React, { useEffect } from 'react';
+import petApi from '@/api/petApi';
 import { useDispatch, useSelector } from 'react-redux';
+import { setPets } from '@/store/pets'
 import { IRootState } from '@/store/store';
-import { increment } from '@/store/counter';
+import { PetDTO } from '@/api/types/pets';
+import { View, Text } from 'react-native-ui-lib';
 
 export default function HomeScreen() {
+  const dispatch = useDispatch();
 
-  const count = useSelector<IRootState, number>((state) => state.counter.value)
-  const dispatch = useDispatch()
-  const router = useRouter();
+  const pets = useSelector<IRootState, PetDTO[]>((state) => state.pets.pets);
 
-  const goToLogin = () => {
-    router.replace('/login');
+  useEffect(() => {
+    loadPets()
+  }, []);
+
+  const loadPets = async () => {
+    const pets = await petApi.getPets();
+    dispatch(setPets(pets));
+
   }
 
+
   return (
-    <View>
-      <Text>Index Screen {count}</Text>
-      <Button
-        onPress={() => dispatch(increment())}
-        title="Increment"
-      />
-      <Button
-        onPress={goToLogin}
-        title="Go to login"
-      />
-    </View>
+    <View padding-20>
+      {pets.map(pet => <Text key={pet.id}>{pet.name}</Text>)}
+    </View >
   );
 }
