@@ -3,9 +3,11 @@ import { BaseResponse } from '@/api/types/baseResponse';
 import { AxiosError } from 'axios';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Button, HelperText, Text, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, View, Text, TextField } from 'react-native-ui-lib';
 import { object, string, ref, ValidationError } from 'yup';
+import { useAppTheme } from './_layout';
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -16,6 +18,10 @@ export default function SignupScreen() {
     password: '',
     confirmPassword: ''
   });
+
+  const {
+    colors: { error }
+  } = useAppTheme()
 
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [registerEnabled, setRegisterEnabled] = useState(true);
@@ -74,14 +80,11 @@ export default function SignupScreen() {
 
   return (
     <SafeAreaView>
-      <View marginT-100 paddingH-30>
-        <Text text30 center marginT-50>Sign Up</Text>
-        <TextField
-          placeholder={'Username'}
-          autoCapitalize="none"
-          floatingPlaceholder
-          floatingPlaceholderColor={'default'}
-          preset="underline"
+      <View style={styles.container}>
+        <Text style={styles.title} variant='headlineLarge'>Sign up</Text>
+        <TextInput
+          label="Username"
+          autoCapitalize='none'
           value={signUpdata.username}
           onChangeText={(newUsername) => {
             setSignUpData((state) => ({
@@ -90,50 +93,53 @@ export default function SignupScreen() {
             }))
           }}
         />
-        <TextField
-          placeholder={'Email'}
-          floatingPlaceholder
-          autoCapitalize="none"
-          preset="underline"
-          floatingPlaceholderColor={'default'}
+        <TextInput
+          label="Email"
+          autoCapitalize='none'
           value={signUpdata.email}
-          onChangeText={(email) => {
+          onChangeText={(newEmail) => {
             setSignUpData((state) => ({
               ...state,
-              email
+              email: newEmail
             }))
           }}
         />
-        <TextField
-          placeholder={'Password'}
-          autoCapitalize="none"
+        <TextInput
+          label="Password"
+          autoCapitalize='none'
           secureTextEntry
-          floatingPlaceholder
-          preset="underline"
-          floatingPlaceholderColor={'default'}
-          value={signUpdata.password}
-          onChangeText={(password) => {
+          value={signUpdata.email}
+          onChangeText={(newPassword) => {
             setSignUpData((state) => ({
               ...state,
-              password
+              password: newPassword
             }))
           }}
         />
-        <TextField
-          placeholder={'Confirm password'}
-          autoCapitalize="none"
+        <TextInput
+          label="Confirm password"
+          autoCapitalize='none'
           secureTextEntry
-          floatingPlaceholder
-          preset="underline"
-          floatingPlaceholderColor={'default'}
-          value={signUpdata.confirmPassword}
-          onChangeText={(confirmPassword) => {
+          value={signUpdata.email}
+          onChangeText={(newPassword) => {
             setSignUpData((state) => ({
               ...state,
-              confirmPassword
+              confirmPassword: newPassword
             }))
           }}
         />
+        {!!validationErrors && validationErrors.length > 0 ? validationErrors.map(e => {
+          return <Text key={e} style={{ color: error }}>{e}</Text>
+        }) : null}
+        {registerSuccess ?
+          <Text style={{ textAlign: 'center' }}>Please check your email</Text> :
+          <Button disabled={!registerEnabled} onPress={tryRegister}>Register</Button>
+        }
+        <Button onPress={goToSignIn} >Sign in</Button>
+      </View>
+      {/* <View marginT-100 paddingH-30>
+
+
         {!!validationErrors && validationErrors.length > 0 ? validationErrors.map(e => {
           return <Text key={e} red20 center>{e}</Text>
         }) : null}
@@ -142,7 +148,19 @@ export default function SignupScreen() {
           <Button disabled={!registerEnabled} label={'Register'} size={Button.sizes.medium} marginT-20 onPress={tryRegister} />
         }
         <Button label={'Sign In'} link size={Button.sizes.medium} marginT-20 onPress={goToSignIn} />
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 150,
+  },
+  title: {
+    textAlign: 'center'
+  },
+  errorMessage: {
+    color: 'red'
+  }
+})

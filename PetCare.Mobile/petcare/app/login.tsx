@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Text from 'react-native-ui-lib/text';
-import { Button, TextField, View } from 'react-native-ui-lib';
 import { useRouter } from 'expo-router';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/store/user';
 import authApi from '@/api/authApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text, TextInput } from 'react-native-paper'
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
@@ -27,28 +27,44 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView>
-      <View marginT-150 paddingH-30>
-        <Text text30 center marginT-50>Sign In</Text>
-        <TextField
-          autoCapitalize="none"
-          placeholder={'Username'}
-          floatingPlaceholder
-          preset="underline"
+      <View style={styles.container}>
+        <Text style={styles.title} variant='headlineLarge'>Sign in</Text>
+        <TextInput
+          label="Username"
+          autoCapitalize='none'
           value={username}
           onChangeText={(newUsername) => { setUsername(newUsername) }}
         />
-        <TextField
-          placeholder={'Password'}
-          autoCapitalize="none"
-          floatingPlaceholder
-          preset="underline"
+        <TextInput
+          label="Password"
+          autoCapitalize='none'
           secureTextEntry
           value={password}
           onChangeText={(newPassword) => { setPassword(newPassword) }}
         />
-        <Button label={'Login'} size={Button.sizes.medium} marginT-20 onPress={tryLogin} />
-        <Button label={'Sign up'} link size={Button.sizes.medium} marginT-20 onPress={goToSignUp} />
+        <View style={styles.buttonsContainer}>
+          <Button style={styles.buttons} onPress={tryLogin} mode='contained'>Login</Button>
+          <Button style={styles.buttons} onPress={goToSignUp}>Sign up</Button>
+        </View>
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    color: 'black',
+    textAlign: 'center'
+  },
+  container: {
+    marginTop: 200
+  },
+  buttons: {
+    maxWidth: 100,
+  },
+  buttonsContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+    gap: 20
+  }
+})

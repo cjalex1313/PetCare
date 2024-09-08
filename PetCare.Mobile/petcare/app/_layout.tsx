@@ -5,8 +5,17 @@ import store from '../store/store'
 import { Provider, useDispatch } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setIsLoggedIn } from '@/store/user';
+import { MD3LightTheme as DefaultTheme, PaperProvider, useTheme } from 'react-native-paper';
 
 SplashScreen.preventAutoHideAsync();
+
+const theme = {
+  ...DefaultTheme,
+};
+
+export type AppTheme = typeof theme;
+
+export const useAppTheme = () => useTheme<AppTheme>();
 
 const LayoutImpl = () => {
   const dispatch = useDispatch();
@@ -30,6 +39,9 @@ export default function Layout() {
 
 
   return <Provider store={store}>
-    <LayoutImpl />
-  </Provider>;
+    <PaperProvider theme={theme}>
+      <LayoutImpl />
+    </PaperProvider>
+  </Provider>
+    ;
 }
