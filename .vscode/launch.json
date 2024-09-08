@@ -1,12 +1,13 @@
 {
     "version": "0.2.0",
     "configurations": [
+      
         {
-            "name": "C#: PetCare.Server [https]",
+            "name": "C#: https 1",
             "type": "dotnet",
             "request": "launch",
             "projectPath": "${workspaceFolder}/PetCare.Server/PetCare.Server.csproj",
-            "launchConfigurationId": "TargetFramework=;https"
+            "launchConfigurationId": "TargetFramework=;https",
         }
     ]
 }

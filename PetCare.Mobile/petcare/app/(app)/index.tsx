@@ -8,9 +8,9 @@ import { FlatList, StyleSheet, View, Text } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/build/MaterialIcons';
 import AntDesign from '@expo/vector-icons/build/AntDesign';
-import { Button } from 'react-native-paper';
+import { Appbar, Button, IconButton, List } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 
 export default function HomeScreen() {
   const dispatch = useDispatch();
@@ -37,6 +37,10 @@ export default function HomeScreen() {
     dispatch(setPets(pets));
   }
 
+  const petClicked = (pet: PetDTO) => {
+    console.log(pet.name);
+  }
+
   const renderPetIcon = (petType: PetType) => {
     if (petType == PetType.Cat) {
       return <FontAwesome5 name="cat" size={24} color="black" />
@@ -48,20 +52,31 @@ export default function HomeScreen() {
   }
 
   const renderPetItem = (pet: PetDTO) => {
-    return <View>
-      <Text>{pet.name}</Text>
-    </View>
+    return <List.Item
+      style={{padding: 10}}
+      title={pet.name}
+      onPress={() => petClicked(pet)}
+      left={() => renderPetIcon(pet.petType)}
+    />
   }
 
 
   return (
     <View padding-20>
+      <Stack.Screen
+        options={{
+          headerRight: () => <IconButton
+            icon="plus"
+            size={20}
+            onPress={() => console.log('Pressed')}
+          />
+        }}
+      />
       <FlatList
         data={pets}
         renderItem={({ item }) => renderPetItem(item)}
         keyExtractor={item => item.id}
       />
-      <Button onPress={logOut}>Log out</Button>
     </View >
   );
 }
