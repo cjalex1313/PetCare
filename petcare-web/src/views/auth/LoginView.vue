@@ -37,7 +37,7 @@ import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 import { useAuthApi } from '@/api/auth/authApi'
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 const router = useRouter()
 const authApi = useAuthApi()
 
@@ -53,7 +53,7 @@ const [ username, usernameAttrs ] = defineField('username', {
 });
 const [ password, passwordAttrs ] = defineField('password', {
   validateOnModelUpdate: false
-});
+})
 
 const tryLogin = handleSubmit(async (values: any ): Promise<void> => {
   try {
