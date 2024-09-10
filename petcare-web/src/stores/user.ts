@@ -40,7 +40,7 @@ export const useUserStore = defineStore('user', () => {
 
   const destroySession = (): void => {
     token.value = null;
-    localStorage.removeItem('token');
+    localStorage.removeItem('JWT');
   };
 
   return { 
