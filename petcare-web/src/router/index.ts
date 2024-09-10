@@ -37,20 +37,4 @@ const router = createRouter({
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//   if (to.meta.forAuth) {
-//     if (userStore.isLoggedIn) {
-//       next();
-//     } else {
-//       next({ path: '/login' });
-//     }
-//   } else if (to.meta.forVisitors) {
-//     if (!userStore.isLoggedIn) {
-//       next();
-//     } else {
-//       next({ path: '/home' });
-//     }
-//   }
-// });
-
 export default router

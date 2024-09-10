@@ -18,28 +18,33 @@ const logOut = () => {
 
 <template>
 <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navbar">
-    <div class="container-fluid"><a class="navbar-brand" href="#">PetCare</a><button class="navbar-toggler" v-if="userStore.isLoggedIn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div
-            class="collapse navbar-collapse" id="navbarColor03">
-            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                <li class="nav-item" v-if="!userStore.isLoggedIn">
-                    <router-link class="nav-link" :to="{ name: 'login' }">Login</router-link>
-                </li>
-                <li class="nav-item" v-if="!userStore.isLoggedIn">
-                    <router-link class="nav-link" :to="{ name: 'register' }">Sign Up</router-link>
-                </li>
-                <li class="nav-item" v-if="userStore.isLoggedIn">
-                    <router-link class="nav-link" :to="{ name: 'home' }">Dashboard</router-link>
-                </li>
-                <li class="nav-item" v-if="userStore.isLoggedIn"><a class="nav-link ps-4 pe-5" href="#" @click.prevent="logOut()">Log out</a></li>
-                <li class="nav-item d-flex align-items-center">
-                    <fieldset class="form-group">
-                        <div class="form-check form-switch"><input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox" :checked="isDark" @click="toggleDark()" /></div>
-                    </fieldset>
-                </li>
-            </ul>
-    </div>
-    </div>
+	<button @click="logOut" v-if="userStore.isLoggedIn">LogOut</button>
+	<!-- <div class="container-fluid">
+		<a class="navbar-brand" href="#">PetCare</a>
+		<button class="navbar-toggler" v-if="userStore.isLoggedIn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div
+			class="collapse navbar-collapse" id="navbarColor03">
+			<ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+				<li class="nav-item" v-if="!userStore.isLoggedIn">
+					<RouterLink class="nav-link" :to="{ name: 'login' }">Login</RouterLink>
+				</li>
+				<li class="nav-item" v-if="!userStore.isLoggedIn">
+					<RouterLink class="nav-link" :to="{ name: 'register' }">Sign Up</RouterLink>
+				</li>
+				<li class="nav-item" v-if="userStore.isLoggedIn">
+					<RouterLink class="nav-link" :to="{ name: 'home' }">Dashboard</RouterLink>
+				</li>
+				<li class="nav-item" v-if="userStore.isLoggedIn"><a class="nav-link ps-4 pe-5" href="#" @click.prevent="logOut()">Log out</a></li>
+				<li class="nav-item d-flex align-items-center">
+					<fieldset class="form-group">
+						<div class="form-check form-switch"><input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox" :checked="isDark" @click="toggleDark()" /></div>
+					</fieldset>
+				</li>
+			</ul>
+		</div>
+	</div> -->
 </nav>
 
 </template>
