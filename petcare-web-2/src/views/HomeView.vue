@@ -2,6 +2,7 @@
 import { onBeforeMount, ref } from 'vue';
 import { usePetsApi } from '@/api/pets/petApi';
 import type { PetDTO } from '@/types/petDTO';
+import PetList from '@/components/pets/PetList.vue';
 
 const petsApi = usePetsApi();
 
@@ -19,6 +20,8 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <main>{{ pets.length }}</main>
+    <main>
+      <PetList :pets="pets" />
+    </main>
   </div>
 </template>
