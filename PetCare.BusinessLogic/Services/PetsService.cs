@@ -23,24 +23,19 @@ public class PetService : IPetService
 
     public IEnumerable<PetDTO> GetUserPets(string userId)
     {
-        var result = _dbContext.Pets.Where(p => p.UserId == userId).Select(p => new PetDTO
-        {
-            Id = p.Id,
-            Name = p.Name,
-            DateOfBirth = p.DateOfBirth,
-            PetType = MapPetType(p.GetType())
-        }).ToList();
+        var result = _dbContext.Pets.Where(p => p.UserId == userId).Select(p => PetDTO.GetDTO(p)).ToList();
         return result ?? new List<PetDTO>();
     }
 
     public void DeletePet(Guid id, string userId)
     {
         var dbPet = _dbContext.Pets.FirstOrDefault(p => p.Id == id);
-        if(dbPet == null)
+        if (dbPet == null)
         {
             throw new PetNotFoundExpcetion(id);
         }
-        if (dbPet.UserId != userId) {
+        if (dbPet.UserId != userId)
+        {
             throw new PetOwnershipException();
         }
         _dbContext.Pets.Remove(dbPet);
@@ -56,18 +51,5 @@ public class PetService : IPetService
             throw new PetNotFoundExpcetion(id);
         }
         return dbPet;
-    }
-
-    private static PetType MapPetType(Type type)
-    {
-        if (type == typeof(Dog))
-        {
-            return PetType.Dog;
-        }
-        if (type == typeof(Cat))
-        {
-            return PetType.Cat;
-        }
-        return PetType.Unknown;
     }
 }

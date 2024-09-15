@@ -9,5 +9,10 @@ export function usePetsApi() {
     return response.data;
   };
 
-  return { getPets };
+  const getPet = async (id: string): Promise<PetDTO> => {
+    const response = await baseApi.get<PetDTO>(`/Pets/${id}`);
+    return response.data;
+  };
+
+  return { getPets, getPet };
 }

@@ -29,22 +29,27 @@ public class PetsController : BaseController
     return Ok(pets);
   }
 
-    [HttpDelete("{id:guid}")]
-    public ActionResult<BaseResponse> DeletePet([FromRoute] Guid id)
+  [HttpDelete("{id:guid}")]
+  public ActionResult<BaseResponse> DeletePet([FromRoute] Guid id)
+  {
+    string userId = this.GetUserId();
+    _petService.DeletePet(id, userId);
+    return Ok(new BaseResponse()
     {
-        string userId = this.GetUserId();
-        _petService.DeletePet(id, userId);
-        return Ok(new BaseResponse()
-        {
-            Succeeded = true
-        });
-    }
+      Succeeded = true
+    });
+  }
 
-    [HttpGet("{id:guid}")]
-    public ActionResult<BaseResponseWithData<Pet>> GetPet([FromRoute] Guid id) {
-        var userId = GetUserId();
-        Pet pet = _petService.GetPet(id);
-        var response = new BaseResponseWithData<Pet>(pet);
-        return Ok(response);
+  [HttpGet("{id:guid}")]
+  public ActionResult<PetDTO> GetPet([FromRoute] Guid id)
+  {
+    var userId = GetUserId();
+    Pet pet = _petService.GetPet(id);
+    if (pet.UserId != userId)
+    {
+      throw new PetOwnershipException();
     }
-} 
+    var dto = PetDTO.GetDTO(pet);
+    return Ok(dto);
+  }
+}
