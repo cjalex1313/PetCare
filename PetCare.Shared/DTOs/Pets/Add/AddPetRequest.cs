@@ -1,6 +1,6 @@
-﻿namespace PetCare.Shared.DTOs.Pets.Cats;
+﻿namespace PetCare.Shared.DTOs.Pets.Add;
 
-public class AddCatRequest : BaseRequest
+public class AddPetRequest : BaseRequest
 {
     public required string Name { get; set; }
     public DateTime DateOfBirth { get; set; }

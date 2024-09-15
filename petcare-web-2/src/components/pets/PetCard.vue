@@ -2,13 +2,17 @@
   <Card class="pet-card">
     <template #header> </template>
     <template #title>
-      {{ pet.name }}
+      <div class="flex items-center">
+        <PetIcon :petType="props.pet.petType" class="w-8 h-8 mr-3" />
+        {{ props.pet.name }}
+      </div>
     </template>
   </Card>
 </template>
 
 <script setup lang="ts">
 import Card from 'primevue/card';
+import PetIcon from './PetIcon.vue';
 import type { PetDTO } from '@/types/petDTO';
 
 const props = defineProps<{
@@ -16,9 +20,4 @@ const props = defineProps<{
 }>();
 </script>
 
-<style lang="css" scoped>
-.pet-card {
-  width: 25rem;
-  overflow: hidden;
-}
-</style>
+<style lang="css" scoped></style>

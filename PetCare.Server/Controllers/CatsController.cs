@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PetCare.BusinessLogic.Services;
 using PetCare.Shared.DTOs;
+using PetCare.Shared.DTOs.Pets.Add;
 using PetCare.Shared.DTOs.Pets.Cats;
 
 namespace PetCare.Server.Controllers;
@@ -19,7 +20,7 @@ public class CatsController : BaseController
     }
 
     [HttpPost]
-    public ActionResult<BaseResponseWithData<CatDTO>> AddCat([FromBody] AddCatRequest request)
+    public ActionResult<BaseResponseWithData<CatDTO>> AddCat([FromBody] AddPetRequest request)
     {
         var userId = GetUserId();
         var result = _catsService.AddCat(new CatDTO { Name = request.Name, DateOfBirth = request.DateOfBirth }, userId);

@@ -12,6 +12,7 @@ namespace PetCare.DataAccess
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
         public DbSet<Pet> Pets { get; set; }
         public DbSet<Cat> Cats { get; set; }
+        public DbSet<Dog> Dogs { get; set; }
 
         public PetDbContext(DbContextOptions<PetDbContext> options) : base(options) { }
 
