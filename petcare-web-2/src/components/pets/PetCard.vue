@@ -1,5 +1,5 @@
 <template>
-  <Card class="pet-card">
+  <Card @click="goToPetPage" class="pet-card cursor-pointer">
     <template #header> </template>
     <template #title>
       <div class="flex items-center">
@@ -14,10 +14,22 @@
 import Card from 'primevue/card';
 import PetIcon from './PetIcon.vue';
 import type { PetDTO } from '@/types/petDTO';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps<{
   pet: PetDTO;
 }>();
+
+const goToPetPage = () => {
+  router.push({
+    name: 'pet',
+    params: {
+      id: props.pet.id
+    }
+  });
+};
 </script>
 
 <style lang="css" scoped></style>
