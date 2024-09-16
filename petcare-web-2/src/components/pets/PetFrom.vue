@@ -1,9 +1,5 @@
 <template>
   <div>
-    <div class="px-4 sm:px-0">
-      <h3 class="text-base font-semibold leading-7 text-gray-900">Pet details</h3>
-      <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Basic data about {{ pet.name }}</p>
-    </div>
     <div class="mt-6 border-t border-gray-100 pt-6">
       <FloatLabel class="mb-8">
         <InputText id="name" v-model="localPet.name" />
@@ -21,7 +17,7 @@
         aria-labelledby="basic"
       />
     </div>
-    <div class="mt-3">
+    <div class="mt-3 flex justify-end">
       <Button @click="savePet">Save</Button>
     </div>
   </div>

@@ -9,17 +9,25 @@
           </h3>
         </div>
         <div class="mt-3 sm:ml-4 sm:mt-0">
-          <div v-if="!isEditing">
+          <div>
             <Button @click="tryDeletePet" severity="danger" class="mr-3">Delete</Button>
-            <Button @click="isEditing = true">Edit</Button>
-          </div>
-          <div v-else>
-            <Button @click="isEditing = false" severity="secondary" class="mr-3">Cancel</Button>
           </div>
         </div>
       </div>
-      <div v-if="isEditing"><PetFrom @saved="handlePetSaved" :pet="pet" /></div>
-      <div v-else><PetDetails :pet="pet" /></div>
+      <Tabs lazy value="0">
+        <TabList>
+          <Tab value="0">Profile</Tab>
+          <Tab value="1">Vaccines</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel value="0">
+            <PetDetails @petUpdated="handlePetUpdate" :petId="pet.id" />
+          </TabPanel>
+          <TabPanel value="1">
+            <p class="m-0">Vaccine placeholder</p>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </div>
     <div v-else></div>
   </div>
@@ -30,11 +38,15 @@ import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useConfirm } from 'primevue/useconfirm';
 import Button from 'primevue/button';
+import Tabs from 'primevue/tabs';
+import TabPanels from 'primevue/tabpanels';
+import TabPanel from 'primevue/tabpanel';
+import TabList from 'primevue/tablist';
+import Tab from 'primevue/tab';
 import { usePetsApi } from '@/api/pets/petApi';
 import type { PetDTO } from '@/types/petDTO';
 import PetIcon from '@/components/pets/PetIcon.vue';
 import PetDetails from '@/components/pets/PetDetails.vue';
-import PetFrom from '@/components/pets/PetFrom.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -42,7 +54,6 @@ const petApi = usePetsApi();
 const confirm = useConfirm();
 
 const pet = ref<PetDTO>();
-const isEditing = ref<boolean>(false);
 
 const loadData = async () => {
   const id = route.params.id as string;
@@ -77,9 +88,9 @@ const deletePet = async () => {
   });
 };
 
-const handlePetSaved = (savedPet: PetDTO) => {
-  pet.value = savedPet;
-  isEditing.value = false;
+const handlePetUpdate = (updatedPet: PetDTO) => {
+  console.log(updatedPet);
+  pet.value = updatedPet;
 };
 
 onMounted(async () => {
