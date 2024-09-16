@@ -9,10 +9,17 @@
           </h3>
         </div>
         <div class="mt-3 sm:ml-4 sm:mt-0">
-          <Button @click="tryDeletePet" severity="danger" class="mr-3">Delete</Button>
-          <Button>Edit</Button>
+          <div v-if="!isEditing">
+            <Button @click="tryDeletePet" severity="danger" class="mr-3">Delete</Button>
+            <Button @click="isEditing = true">Edit</Button>
+          </div>
+          <div v-else>
+            <Button @click="isEditing = false" severity="secondary" class="mr-3">Cancel</Button>
+          </div>
         </div>
       </div>
+      <div v-if="isEditing"><PetFrom @saved="handlePetSaved" :pet="pet" /></div>
+      <div v-else><PetDetails :pet="pet" /></div>
     </div>
     <div v-else></div>
   </div>
@@ -26,6 +33,8 @@ import Button from 'primevue/button';
 import { usePetsApi } from '@/api/pets/petApi';
 import type { PetDTO } from '@/types/petDTO';
 import PetIcon from '@/components/pets/PetIcon.vue';
+import PetDetails from '@/components/pets/PetDetails.vue';
+import PetFrom from '@/components/pets/PetFrom.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -33,6 +42,7 @@ const petApi = usePetsApi();
 const confirm = useConfirm();
 
 const pet = ref<PetDTO>();
+const isEditing = ref<boolean>(false);
 
 const loadData = async () => {
   const id = route.params.id as string;
@@ -65,6 +75,11 @@ const deletePet = async () => {
   router.push({
     name: 'home'
   });
+};
+
+const handlePetSaved = (savedPet: PetDTO) => {
+  pet.value = savedPet;
+  isEditing.value = false;
 };
 
 onMounted(async () => {

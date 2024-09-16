@@ -1,7 +1,37 @@
 import axios, { AxiosError } from 'axios';
 import { useToast } from 'primevue/usetoast';
 import { useRouter } from 'vue-router';
+import { parseISO } from 'date-fns';
 import type { BaseResponse } from '@/types/baseResponse';
+
+const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
+
+const transformDates = (data: any): any => {
+  if (typeof data === 'string' && isoDateRegex.test(data)) {
+    return parseISO(data);
+  }
+
+  if (Array.isArray(data)) {
+    return data.map((item) => transformDates(item));
+  }
+
+  if (typeof data === 'object' && data !== null) {
+    return Object.keys(data).reduce((acc: any, key) => {
+      acc[key] = transformDates(data[key]);
+      return acc;
+    }, {});
+  }
+
+  return data;
+};
+
+// Axios response interceptor
+axios.interceptors.response.use(response => {
+  response.data = transformDates(response.data);
+  return response;
+}, error => {
+  return Promise.reject(error);
+});
 
 export function useBaseApi() {
   const router = useRouter();
@@ -26,6 +56,7 @@ export function useBaseApi() {
 
   instance.interceptors.response.use(
     (response) => {
+      response.data = transformDates(response.data);
       return response;
     },
     (error: AxiosError<BaseResponse>) => {

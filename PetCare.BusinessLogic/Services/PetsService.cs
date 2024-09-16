@@ -10,6 +10,7 @@ public interface IPetService
     void DeletePet(Guid id, string userId);
     Pet GetPet(Guid id);
     IEnumerable<PetDTO> GetUserPets(string userId);
+    void UpdatePet(PetDTO pet);
 }
 
 public class PetService : IPetService
@@ -51,5 +52,14 @@ public class PetService : IPetService
             throw new PetNotFoundExpcetion(id);
         }
         return dbPet;
+    }
+
+    public void UpdatePet(PetDTO pet)
+    {
+        var dbPet = this.GetPet(pet.Id);
+        dbPet.Name = pet.Name;
+        dbPet.DateOfBirth = pet.DateOfBirth;
+        dbPet.Sex = pet.Sex;
+        _dbContext.SaveChanges();
     }
 }

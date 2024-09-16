@@ -15,11 +15,13 @@
         <DatePicker id="dob" v-model="petData.dateOfBirth" />
         <label for="dob">Birthday</label>
       </FloatLabel>
-      <SelectButton v-model="petData.sex" :options="[Sex.Male, Sex.Female]" aria-labelledby="basic">
-        <template #option="slotProps">
-          {{ Sex[slotProps.option] }}
-        </template>
-      </SelectButton>
+      <SelectButton
+        v-model="petData.sex"
+        :options="sexOptions"
+        optionLabel="name"
+        optionValue="value"
+        aria-labelledby="basic"
+      />
     </div>
     <div class="flex justify-end gap-2">
       <Button type="button" label="Cancel" severity="secondary" @click="emits('close')"></Button>
@@ -52,6 +54,17 @@ const petData = reactive<{
   name: '',
   sex: Sex.Male
 });
+
+const sexOptions = [
+  {
+    name: Sex[Sex.Male],
+    value: Sex.Male
+  },
+  {
+    name: Sex[Sex.Female],
+    value: Sex.Female
+  }
+];
 
 const props = defineProps<{
   visible: boolean;

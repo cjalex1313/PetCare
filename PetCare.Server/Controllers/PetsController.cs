@@ -40,6 +40,19 @@ public class PetsController : BaseController
         });
     }
 
+    [HttpPut("{id:guid}")]
+    public ActionResult<PetDTO> UpdatePet(PetDTO pet)
+    {
+        var userId = this.GetUserId();
+        var dbPet = _petService.GetPet(pet.Id);
+        if (dbPet.UserId != userId)
+        {
+            throw new PetOwnershipException();
+        }
+        _petService.UpdatePet(pet);
+        return Ok(pet);
+    }
+
     [HttpGet("{id:guid}")]
     public ActionResult<PetDTO> GetPet([FromRoute] Guid id)
     {

@@ -18,5 +18,10 @@ export function usePetsApi() {
     await baseApi.delete(`/Pets/${id}`);
   }
 
-  return { getPets, getPet, deletePet };
+  const updatePet = async (pet: PetDTO): Promise<PetDTO> => {
+    const response = await baseApi.put<PetDTO>(`/Pets/${pet.id}`, pet);
+    return response.data;
+  }
+
+  return { getPets, getPet, deletePet, updatePet };
 }
