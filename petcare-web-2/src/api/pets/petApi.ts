@@ -14,5 +14,9 @@ export function usePetsApi() {
     return response.data;
   };
 
-  return { getPets, getPet };
+  const deletePet = async (id: string): Promise<void> => {
+    await baseApi.delete(`/Pets/${id}`);
+  }
+
+  return { getPets, getPet, deletePet };
 }

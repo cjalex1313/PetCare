@@ -34,12 +34,12 @@ namespace PetCare.BusinessLogic.Services
         }
 
         private Dog MapDogEntity(DogDTO dto, string userID) {
-            return new Dog { Id = dto.Id, Name = dto.Name, DateOfBirth = dto.DateOfBirth, UserId = userID };
+            return new Dog { Id = dto.Id, Name = dto.Name, DateOfBirth = dto.DateOfBirth, UserId = userID, Sex = dto.Sex };
         }
 
         private DogDTO MapDogDTO(Dog dog)
         {
-            return new DogDTO { Id = dog.Id, Name = dog.Name, DateOfBirth = dog.DateOfBirth, PetType = Shared.DTOs.Pets.PetType.Dog };
+            return new DogDTO { Id = dog.Id, Name = dog.Name, DateOfBirth = dog.DateOfBirth, PetType = Shared.DTOs.Pets.PetType.Dog, Sex = dog.Sex };
         }
     }
 }

@@ -8,6 +8,7 @@ public class PetDTO
     public required string Name { get; set; }
     public DateTime DateOfBirth { get; set; }
     public PetType PetType { get; set; }
+    public Sex Sex { get; set; }
 
     public static PetDTO GetDTO(Pet pet)
     {
@@ -16,6 +17,7 @@ public class PetDTO
             Id = pet.Id,
             Name = pet.Name,
             DateOfBirth = pet.DateOfBirth,
+            Sex = pet.Sex,
             PetType = MapPetType(pet.GetType())
         };
     }

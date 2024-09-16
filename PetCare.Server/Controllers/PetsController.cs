@@ -14,42 +14,42 @@ namespace PetCare.Server.Controllers;
 [ApiController]
 public class PetsController : BaseController
 {
-  private readonly IPetService _petService;
+    private readonly IPetService _petService;
 
-  public PetsController(IPetService petService)
-  {
-    this._petService = petService;
-  }
-
-  [HttpGet]
-  public ActionResult<IEnumerable<PetDTO>> GetUserPets()
-  {
-    var userId = this.GetUserId();
-    var pets = _petService.GetUserPets(userId);
-    return Ok(pets);
-  }
-
-  [HttpDelete("{id:guid}")]
-  public ActionResult<BaseResponse> DeletePet([FromRoute] Guid id)
-  {
-    string userId = this.GetUserId();
-    _petService.DeletePet(id, userId);
-    return Ok(new BaseResponse()
+    public PetsController(IPetService petService)
     {
-      Succeeded = true
-    });
-  }
-
-  [HttpGet("{id:guid}")]
-  public ActionResult<PetDTO> GetPet([FromRoute] Guid id)
-  {
-    var userId = GetUserId();
-    Pet pet = _petService.GetPet(id);
-    if (pet.UserId != userId)
-    {
-      throw new PetOwnershipException();
+        this._petService = petService;
     }
-    var dto = PetDTO.GetDTO(pet);
-    return Ok(dto);
-  }
+
+    [HttpGet]
+    public ActionResult<IEnumerable<PetDTO>> GetUserPets()
+    {
+        var userId = this.GetUserId();
+        var pets = _petService.GetUserPets(userId);
+        return Ok(pets);
+    }
+
+    [HttpDelete("{id:guid}")]
+    public ActionResult<BaseResponse> DeletePet([FromRoute] Guid id)
+    {
+        string userId = this.GetUserId();
+        _petService.DeletePet(id, userId);
+        return Ok(new BaseResponse()
+        {
+            Succeeded = true
+        });
+    }
+
+    [HttpGet("{id:guid}")]
+    public ActionResult<PetDTO> GetPet([FromRoute] Guid id)
+    {
+        var userId = GetUserId();
+        Pet pet = _petService.GetPet(id);
+        if (pet.UserId != userId)
+        {
+            throw new PetOwnershipException();
+        }
+        var dto = PetDTO.GetDTO(pet);
+        return Ok(dto);
+    }
 }

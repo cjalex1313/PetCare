@@ -37,7 +37,7 @@ namespace PetCare.BusinessLogic.Services
             {
                 return null;
             }
-            return new Cat { Id = catDTO.Id, Name = catDTO.Name, DateOfBirth = catDTO.DateOfBirth, UserId = userId };
+            return new Cat { Id = catDTO.Id, Name = catDTO.Name, DateOfBirth = catDTO.DateOfBirth, UserId = userId, Sex = catDTO.Sex };
         }
 
         private CatDTO MapCatDTO(Cat cat)
@@ -46,7 +46,7 @@ namespace PetCare.BusinessLogic.Services
             {
                 return null;
             }
-            return new CatDTO { Id = cat.Id, Name = cat.Name, DateOfBirth = cat.DateOfBirth, PetType = Shared.DTOs.Pets.PetType.Cat };
+            return new CatDTO { Id = cat.Id, Name = cat.Name, DateOfBirth = cat.DateOfBirth, PetType = Shared.DTOs.Pets.PetType.Cat, Sex = cat.Sex };
         }
     }
 }

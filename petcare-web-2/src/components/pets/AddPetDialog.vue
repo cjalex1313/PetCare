@@ -11,10 +11,15 @@
         <InputText id="name" v-model="petData.name" />
         <label for="name">Name</label>
       </FloatLabel>
-      <FloatLabel>
+      <FloatLabel class="mb-8">
         <DatePicker id="dob" v-model="petData.dateOfBirth" />
         <label for="dob">Birthday</label>
       </FloatLabel>
+      <SelectButton v-model="petData.sex" :options="[Sex.Male, Sex.Female]" aria-labelledby="basic">
+        <template #option="slotProps">
+          {{ Sex[slotProps.option] }}
+        </template>
+      </SelectButton>
     </div>
     <div class="flex justify-end gap-2">
       <Button type="button" label="Cancel" severity="secondary" @click="emits('close')"></Button>
@@ -29,10 +34,12 @@ import { PetType } from '@/types/petType';
 import Dialog from 'primevue/dialog';
 import FloatLabel from 'primevue/floatlabel';
 import InputText from 'primevue/inputtext';
+import SelectButton from 'primevue/selectbutton';
 import Button from 'primevue/button';
 import DatePicker from 'primevue/datepicker';
 import { useCatsApi } from '@/api/pets/catsApi';
 import { useDogsApi } from '@/api/pets/dogsApi';
+import { Sex } from '@/types/sex';
 
 const catsApi = useCatsApi();
 const dogsApi = useDogsApi();
@@ -40,8 +47,10 @@ const dogsApi = useDogsApi();
 const petData = reactive<{
   name: string;
   dateOfBirth?: Date;
+  sex: Sex;
 }>({
-  name: ''
+  name: '',
+  sex: Sex.Male
 });
 
 const props = defineProps<{
@@ -68,9 +77,9 @@ const savePet = async () => {
     return;
   }
   if (props.petType == PetType.Cat) {
-    await catsApi.addCat(petData.name, petData.dateOfBirth!);
+    await catsApi.addCat(petData.name, petData.dateOfBirth!, petData.sex);
   } else if (props.petType == PetType.Dog) {
-    await dogsApi.addDog(petData.name, petData.dateOfBirth!);
+    await dogsApi.addDog(petData.name, petData.dateOfBirth!, petData.sex);
   }
   emits('saved');
 };
@@ -78,5 +87,6 @@ const savePet = async () => {
 const resetData = () => {
   petData.name = '';
   petData.dateOfBirth = undefined;
+  petData.sex = Sex.Male;
 };
 </script>

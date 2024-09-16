@@ -6,4 +6,11 @@ public class Pet
     public required string UserId { get; set; }
     public required string Name { get; set; }
     public DateTime DateOfBirth { get; set; }
+    public Sex Sex { get; set; }
+}
+
+public enum Sex
+{
+    Male = 0,
+    Female = 1
 }
