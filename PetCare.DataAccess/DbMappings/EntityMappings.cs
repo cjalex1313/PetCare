@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using PetCare.Shared.Entities.Pets;
 using Microsoft.AspNetCore.Identity;
+using PetCare.Shared.Entities;
 
 namespace PetCare.DataAccess.DbMappings;
 public static class EntityMappings
@@ -38,5 +39,15 @@ public static class EntityMappings
     public static void MapDogs(EntityTypeBuilder<Dog> entity)
     {
         entity.ToTable("Dogs");
+    }
+
+    public static void MapVaccines(EntityTypeBuilder<Vaccine> entity)
+    {
+        entity.ToTable("Vaccines");
+        entity.HasKey(e => e.Id);
+        entity.Property(e => e.Name).HasMaxLength(128);
+        entity.Property(e => e.AdministrationDate).HasColumnType("date");
+        entity.Property(e => e.NextDueDate).HasColumnType("date");
+        entity.HasOne(e => e.Pet).WithMany(p => p.Vaccines).HasForeignKey(e => e.PetId).OnDelete(DeleteBehavior.Cascade);
     }
 }

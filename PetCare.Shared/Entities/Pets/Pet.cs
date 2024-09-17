@@ -7,6 +7,7 @@ public class Pet
     public required string Name { get; set; }
     public DateTime DateOfBirth { get; set; }
     public Sex Sex { get; set; }
+    public virtual ICollection<Vaccine>? Vaccines { get; set; }
 }
 
 public enum Sex

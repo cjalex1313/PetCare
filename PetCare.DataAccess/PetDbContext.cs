@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PetCare.Shared.Entities.Auth;
 using PetCare.DataAccess.DbMappings;
 using PetCare.Shared.Entities.Pets;
+using PetCare.Shared.Entities;
 
 namespace PetCare.DataAccess
 {
@@ -13,6 +14,7 @@ namespace PetCare.DataAccess
         public DbSet<Pet> Pets { get; set; }
         public DbSet<Cat> Cats { get; set; }
         public DbSet<Dog> Dogs { get; set; }
+        public DbSet<Vaccine> Vaccines { get; set; }
 
         public PetDbContext(DbContextOptions<PetDbContext> options) : base(options) { }
 
@@ -23,6 +25,7 @@ namespace PetCare.DataAccess
             EntityMappings.MapPets(builder.Entity<Pet>());
             EntityMappings.MapCats(builder.Entity<Cat>());
             EntityMappings.MapDogs(builder.Entity<Dog>());
+            EntityMappings.MapVaccines(builder.Entity<Vaccine>());
         }
     }
 }

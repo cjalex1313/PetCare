@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using PetCare.Server.Middleware;
 using PetCare.BusinessLogic.Services;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
+using PetCare.Server.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +49,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddControllers();
+//AutoMapper
+builder.Services.AddAutoMapper(typeof(VaccineProfile));
+
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

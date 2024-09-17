@@ -24,7 +24,7 @@
             <PetDetails @petUpdated="handlePetUpdate" :petId="pet.id" />
           </TabPanel>
           <TabPanel value="1">
-            <p class="m-0">Vaccine placeholder</p>
+            <VaccineDetails />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -47,6 +47,7 @@ import { usePetsApi } from '@/api/pets/petApi';
 import type { PetDTO } from '@/types/petDTO';
 import PetIcon from '@/components/pets/PetIcon.vue';
 import PetDetails from '@/components/pets/PetDetails.vue';
+import VaccineDetails from '@/components/vaccines/VaccineDetails.vue';
 
 const route = useRoute();
 const router = useRouter();

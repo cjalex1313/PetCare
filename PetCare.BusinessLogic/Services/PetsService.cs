@@ -7,6 +7,7 @@ namespace PetCare.BusinessLogic.Services;
 
 public interface IPetService
 {
+    void VerifyUserCanAccessPet(string userId, Guid petId);
     void DeletePet(Guid id, string userId);
     Pet GetPet(Guid id);
     IEnumerable<PetDTO> GetUserPets(string userId);
@@ -26,6 +27,19 @@ public class PetService : IPetService
     {
         var result = _dbContext.Pets.Where(p => p.UserId == userId).Select(p => PetDTO.GetDTO(p)).ToList();
         return result ?? new List<PetDTO>();
+    }
+
+    public void VerifyUserCanAccessPet(string userId, Guid petId)
+    {
+        var pet = _dbContext.Pets.FirstOrDefault(p => p.Id == petId);
+        if (pet == null)
+        {
+            throw new PetNotFoundExpcetion(petId);
+        }
+        if (pet.UserId != userId)
+        {
+            throw new PetOwnershipException();
+        }
     }
 
     public void DeletePet(Guid id, string userId)
