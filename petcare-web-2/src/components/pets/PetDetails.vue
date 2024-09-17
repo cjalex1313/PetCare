@@ -19,11 +19,11 @@
 
 <script setup lang="ts">
 import { usePetsApi } from '@/api/pets/petApi';
-import type { PetDTO } from '@/types/petDTO';
 import { onMounted, ref } from 'vue';
 import PetDetailsInfo from './PetDetailsInfo.vue';
 import PetFrom from './PetFrom.vue';
 import Button from 'primevue/button';
+import type { PetDTO } from '@/types/dtos/petDTO';
 
 const petApi = usePetsApi();
 

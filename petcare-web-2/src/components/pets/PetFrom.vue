@@ -30,9 +30,9 @@ import FloatLabel from 'primevue/floatlabel';
 import Button from 'primevue/button';
 import DatePicker from 'primevue/datepicker';
 import SelectButton from 'primevue/selectbutton';
-import type { PetDTO } from '@/types/petDTO';
 import { Sex } from '@/types/sex';
 import { usePetsApi } from '@/api/pets/petApi';
+import type { PetDTO } from '@/types/dtos/petDTO';
 
 const petApi = usePetsApi();
 

@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using PetCare.Shared.Entities;
-
-namespace PetCare.Server.DTOs
+﻿namespace PetCare.Shared.DTOs
 {
     public class VaccineDTO
     {
@@ -11,13 +8,5 @@ namespace PetCare.Server.DTOs
         public DateTime AdministrationDate { get; set; }
         public DateTime NextDueDate { get; set; }
         public string? Notes { get; set; }
-    }
-
-    public class VaccineProfile : Profile
-    {
-        public VaccineProfile()
-        {
-            CreateMap<Vaccine, VaccineDTO>().ReverseMap();
-        }
     }
 }

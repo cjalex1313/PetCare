@@ -3,11 +3,11 @@ import { computed, onBeforeMount, ref } from 'vue';
 import Button from 'primevue/button';
 import Menu from 'primevue/menu';
 import { usePetsApi } from '@/api/pets/petApi';
-import type { PetDTO } from '@/types/petDTO';
 import PetList from '@/components/pets/PetList.vue';
 import type { MenuItem } from 'primevue/menuitem';
 import { PetType } from '@/types/petType';
 import AddPetDialog from '@/components/pets/AddPetDialog.vue';
+import type { PetDTO } from '@/types/dtos/petDTO';
 
 const petsApi = usePetsApi();
 

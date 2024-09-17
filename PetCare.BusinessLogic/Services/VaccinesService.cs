@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetCare.DataAccess;
+using PetCare.Shared.DTOs;
 using PetCare.Shared.Entities;
 using PetCare.Shared.Exceptions.Vaccines;
 using System;
@@ -13,8 +14,10 @@ namespace PetCare.BusinessLogic.Services
     public interface IVaccinesService
     {
         void AddVaccine(Vaccine vaccine);
+        void DeleteVaccine(Vaccine vaccine);
         Vaccine GetVaccine(Guid id);
         IEnumerable<Vaccine> GetVaccinesForPet(Guid petId);
+        Vaccine UpdateVaccine(VaccineDTO vaccineDTO);
     }
 
     internal class VaccinesService : IVaccinesService
@@ -32,6 +35,12 @@ namespace PetCare.BusinessLogic.Services
             _dbContext.SaveChanges();
         }
 
+        public void DeleteVaccine(Vaccine vaccine)
+        {
+            _dbContext.Vaccines.Remove(vaccine);
+            _dbContext.SaveChanges();
+        }
+
         public Vaccine GetVaccine(Guid id)
         {
             var vaccine = _dbContext.Vaccines.FirstOrDefault(v => v.Id == id);
@@ -46,6 +55,21 @@ namespace PetCare.BusinessLogic.Services
         {
             var vaccines = _dbContext.Vaccines.Where(v => v.PetId == petId).ToList();
             return vaccines;
+        }
+
+        public Vaccine UpdateVaccine(VaccineDTO vaccineDTO)
+        {
+            var vaccine = _dbContext.Vaccines.FirstOrDefault(v => v.Id ==  vaccineDTO.Id);
+            if (vaccine == null)
+            {
+                throw new VaccineNotFoundException(vaccineDTO.Id);
+            }
+            vaccine.Name = vaccineDTO.Name;
+            vaccine.Notes = vaccineDTO.Notes;
+            vaccine.NextDueDate = vaccineDTO.NextDueDate;
+            vaccine.AdministrationDate = vaccineDTO.AdministrationDate;
+            _dbContext.SaveChanges();
+            return vaccine;
         }
     }
 }

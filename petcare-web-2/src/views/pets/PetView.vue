@@ -24,7 +24,7 @@
             <PetDetails @petUpdated="handlePetUpdate" :petId="pet.id" />
           </TabPanel>
           <TabPanel value="1">
-            <VaccineDetails />
+            <VaccinesDetails :pet-id="pet.id" />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -44,10 +44,10 @@ import TabPanel from 'primevue/tabpanel';
 import TabList from 'primevue/tablist';
 import Tab from 'primevue/tab';
 import { usePetsApi } from '@/api/pets/petApi';
-import type { PetDTO } from '@/types/petDTO';
 import PetIcon from '@/components/pets/PetIcon.vue';
 import PetDetails from '@/components/pets/PetDetails.vue';
-import VaccineDetails from '@/components/vaccines/VaccineDetails.vue';
+import VaccinesDetails from '@/components/vaccines/VaccinesDetails.vue';
+import type { PetDTO } from '@/types/dtos/petDTO';
 
 const route = useRoute();
 const router = useRouter();
@@ -90,7 +90,6 @@ const deletePet = async () => {
 };
 
 const handlePetUpdate = (updatedPet: PetDTO) => {
-  console.log(updatedPet);
   pet.value = updatedPet;
 };
 

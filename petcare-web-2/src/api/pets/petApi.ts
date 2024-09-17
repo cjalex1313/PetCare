@@ -1,5 +1,5 @@
+import type { PetDTO } from '@/types/dtos/petDTO';
 import { useBaseApi } from '../baseApi';
-import type { PetDTO } from '@/types/petDTO';
 
 export function usePetsApi() {
   const { baseApi } = useBaseApi();

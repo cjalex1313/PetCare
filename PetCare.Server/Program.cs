@@ -10,7 +10,7 @@ using PetCare.Server.Middleware;
 using PetCare.BusinessLogic.Services;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
-using PetCare.Server.DTOs;
+using PetCare.Server.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 

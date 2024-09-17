@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetCare.BusinessLogic.Services;
-using PetCare.Server.DTOs;
+using PetCare.Shared.DTOs;
 using PetCare.Shared.Entities;
 using PetCare.Shared.Exceptions.Pets;
 
@@ -42,7 +42,27 @@ namespace PetCare.Server.Controllers
             _petService.VerifyUserCanAccessPet(userId, vaccine.PetId);
             var dto = _mapper.Map<VaccineDTO>(vaccine);
             return Ok(dto);
-            
+        }
+
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteVaccine([FromRoute] Guid id)
+        {
+            var userId = GetUserId();
+            var vaccine = _vaccinesService.GetVaccine(id);
+            _petService.VerifyUserCanAccessPet(userId, vaccine.PetId);
+            _vaccinesService.DeleteVaccine(vaccine);
+            return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult UpdateVaccine([FromBody] VaccineDTO vaccineDTO)
+        {
+            var vaccine = _vaccinesService.GetVaccine(vaccineDTO.Id);
+            var userId = GetUserId();
+            _petService.VerifyUserCanAccessPet(userId, vaccine.PetId);
+            vaccine = _vaccinesService.UpdateVaccine(vaccineDTO);
+            var result = _mapper.Map<VaccineDTO>(vaccine);
+            return Ok(result);
         }
 
         [HttpPost]

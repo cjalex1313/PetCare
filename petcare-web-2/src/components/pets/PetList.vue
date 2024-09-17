@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PetDTO } from '@/types/petDTO';
+import type { PetDTO } from '@/types/dtos/petDTO';
 import PetCard from './PetCard.vue';
 
 const props = defineProps<{

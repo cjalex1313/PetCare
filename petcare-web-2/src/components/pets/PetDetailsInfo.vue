@@ -24,10 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import type { PetDTO } from '@/types/petDTO';
 import { Sex } from '@/types/sex';
 import { computed } from 'vue';
 import { calculateAge } from '@/helpers/dateHelpers';
+import type { PetDTO } from '@/types/dtos/petDTO';
 
 const props = defineProps<{
   pet: PetDTO;

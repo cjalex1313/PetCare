@@ -13,8 +13,8 @@
 <script setup lang="ts">
 import Card from 'primevue/card';
 import PetIcon from './PetIcon.vue';
-import type { PetDTO } from '@/types/petDTO';
 import { useRouter } from 'vue-router';
+import type { PetDTO } from '@/types/dtos/petDTO';
 
 const router = useRouter();
 
