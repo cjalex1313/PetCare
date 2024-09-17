@@ -8,6 +8,7 @@
       <FloatLabel class="mb-8">
         <DatePicker
           id="administrationDate"
+          @date-select="adminDateSelected"
           v-model="localVaccine.administrationDate"
           dateFormat="dd/mm/yy"
         />
@@ -33,7 +34,7 @@ import Button from 'primevue/button';
 import DatePicker from 'primevue/datepicker';
 import FloatLabel from 'primevue/floatlabel';
 import InputText from 'primevue/inputtext';
-import { inject, type Ref, onMounted, ref } from 'vue';
+import { inject, type Ref, onMounted, ref, watch } from 'vue';
 import { addYears } from 'date-fns';
 import type { VaccineDTO } from '@/types/dtos/vaccineDTO';
 import type { DynamicDialogInstance } from 'primevue/dynamicdialogoptions';
@@ -45,11 +46,18 @@ const vaccinesApi = useVaccinesApi();
 const dialogRef = inject<Ref<DynamicDialogInstance>>('dialogRef');
 
 const localVaccine = ref<VaccineDTO>();
+const isLoaded = ref<boolean>(false);
 
 const closeDialog = (shouldReload: boolean) => {
   dialogRef?.value.close({
     shouldReload
   });
+};
+
+const adminDateSelected = (adminDate: Date) => {
+  if (localVaccine.value) {
+    localVaccine.value.nextDueDate = addYears(adminDate, 1);
+  }
 };
 
 const saveVaccine = async () => {
@@ -81,5 +89,6 @@ onMounted(() => {
       notes: ''
     };
   }
+  isLoaded.value = true;
 });
 </script>
