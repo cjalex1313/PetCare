@@ -19,12 +19,33 @@
         </template>
       </Column>
       <Column field="notes" header="Notes"></Column>
+      <Column field="action" header="Action" class="w-44">
+        <template #body="{ data }">
+          <div class="flex justify-end">
+            <Button
+              @click="() => editVaccine(data)"
+              class="mr-2"
+              icon="pi pi-pencil"
+              rounded
+              raised
+            />
+            <Button
+              @click="() => tryDeleteVaccine(data)"
+              severity="danger"
+              icon="pi pi-trash"
+              rounded
+              raised
+            />
+          </div>
+        </template>
+      </Column>
     </DataTable>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useVaccinesApi } from '@/api/vaccineApi';
+import { useConfirm } from 'primevue/useconfirm';
 import { format } from 'date-fns';
 import DataTable from 'primevue/datatable';
 import Button from 'primevue/button';
@@ -36,6 +57,7 @@ import VaccineDialog from './VaccineDialog.vue';
 
 const vaccinesApi = useVaccinesApi();
 const dialogService = useDialog();
+const confirm = useConfirm();
 
 const props = defineProps<{
   petId: string;
@@ -50,6 +72,51 @@ const loadVaccines = async () => {
 
 const formatDate = (value: Date) => {
   return format(value, 'dd-MM-yyyy');
+};
+
+const editVaccine = (vaccine: VaccineDTO) => {
+  dialogService.open(VaccineDialog, {
+    props: {
+      header: 'Vaccine',
+      style: {
+        minWidth: '50vw'
+      },
+      modal: true
+    },
+    data: {
+      petId: props.petId,
+      vaccine
+    },
+    onClose: async (opt) => {
+      if (opt?.data.shouldReload) {
+        await loadVaccines();
+      }
+    }
+  });
+};
+
+const tryDeleteVaccine = (vaccine: VaccineDTO) => {
+  confirm.require({
+    header: 'Delete vaccine',
+    message: `Are you sure you want to delete ${vaccine.name}?`,
+    icon: 'pi pi-info-circle',
+    rejectLabel: 'Cancel',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger'
+    },
+    accept: () => deleteVaccine(vaccine)
+  });
+};
+
+const deleteVaccine = async (vaccine: VaccineDTO) => {
+  await vaccinesApi.deleteVaccine(vaccine.id);
+  await loadVaccines();
 };
 
 const openNewVaccineDialog = () => {

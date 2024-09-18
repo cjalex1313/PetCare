@@ -12,7 +12,16 @@ export function useVaccinesApi() {
   const addVaccine = async (vaccine: VaccineDTO): Promise<VaccineDTO> => {
     const response = await baseApi.post<VaccineDTO>('Vaccine', vaccine);
     return response.data;
-  }
+  };
 
-  return { getPetVaccines, addVaccine };
+  const updateVaccine = async (vaccine: VaccineDTO): Promise<VaccineDTO> => {
+    const response = await baseApi.put<VaccineDTO>('Vaccine', vaccine);
+    return response.data;
+  };
+
+  const deleteVaccine = async (vaccineId: string): Promise<void> => {
+    await baseApi.delete(`Vaccine/${vaccineId}`);
+  };
+
+  return { getPetVaccines, addVaccine, updateVaccine, deleteVaccine };
 }

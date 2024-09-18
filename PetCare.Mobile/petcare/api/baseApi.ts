@@ -6,13 +6,12 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(async function (config) {
-    const token = await AsyncStorage.getItem('JWT')
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+  const token = await AsyncStorage.getItem('JWT')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 }, error => {
-    
 })
 
 export default instance;

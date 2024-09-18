@@ -53,7 +53,7 @@ export default function HomeScreen() {
 
   const renderPetItem = (pet: PetDTO) => {
     return <List.Item
-      style={{padding: 10}}
+      style={{ padding: 10 }}
       title={pet.name}
       onPress={() => petClicked(pet)}
       left={() => renderPetIcon(pet.petType)}
@@ -77,6 +77,7 @@ export default function HomeScreen() {
         renderItem={({ item }) => renderPetItem(item)}
         keyExtractor={item => item.id}
       />
+      <Button onPress={logOut} mode='contained'>Logout</Button>
     </View >
   );
 }

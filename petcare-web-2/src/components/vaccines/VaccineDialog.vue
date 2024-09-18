@@ -67,7 +67,7 @@ const saveVaccine = async () => {
   if (localVaccine.value.id == emptyGuid) {
     await vaccinesApi.addVaccine(localVaccine.value);
   } else {
-    alert('existing');
+    await vaccinesApi.updateVaccine(localVaccine.value);
   }
   closeDialog(true);
 };
