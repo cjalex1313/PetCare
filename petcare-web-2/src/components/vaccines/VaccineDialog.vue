@@ -15,7 +15,12 @@
         <label for="administrationDate">Administration date</label>
       </FloatLabel>
       <FloatLabel class="mb-8">
-        <DatePicker id="nextDueDate" v-model="localVaccine.nextDueDate" dateFormat="dd/mm/yy" />
+        <DatePicker
+          id="nextDueDate"
+          v-model="localVaccine.nextDueDate"
+          dateFormat="dd/mm/yy"
+          showButtonBar
+        />
         <label for="nextDueDate">Next due date</label>
       </FloatLabel>
       <FloatLabel class="mb-8">
@@ -85,7 +90,7 @@ onMounted(() => {
       petId: petId,
       name: '',
       administrationDate: new Date(),
-      nextDueDate: addYears(new Date(), 1),
+      nextDueDate: undefined,
       notes: ''
     };
   }

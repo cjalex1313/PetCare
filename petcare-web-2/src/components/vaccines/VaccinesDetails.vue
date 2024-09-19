@@ -15,7 +15,9 @@
       <Column field="name" header="Name"></Column>
       <Column field="nextDueDate" dataType="date" header="Next due date">
         <template #body="{ data }">
-          {{ formatDate(data.nextDueDate) }}
+          <div v-if="data.nextDueDate">
+            {{ formatDate(data.nextDueDate) }}
+          </div>
         </template>
       </Column>
       <Column field="notes" header="Notes"></Column>
