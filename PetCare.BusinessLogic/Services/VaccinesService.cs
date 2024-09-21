@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PetCare.DataAccess;
+using PetCare.Email;
+using PetCare.Shared.Config;
 using PetCare.Shared.DTOs;
 using PetCare.Shared.Entities;
 using PetCare.Shared.Exceptions.Vaccines;
@@ -25,10 +28,12 @@ namespace PetCare.BusinessLogic.Services
     internal class VaccinesService : IVaccinesService
     {
         private readonly PetDbContext _dbContext;
+        private readonly IEmailService _emailService;
 
-        public VaccinesService(PetDbContext dbContext)
+        public VaccinesService(PetDbContext dbContext, IEmailService emailService)
         {
             _dbContext = dbContext;
+            _emailService = emailService;
         }
 
         public void AddVaccine(Vaccine vaccine)
@@ -61,10 +66,35 @@ namespace PetCare.BusinessLogic.Services
 
         public void SendVaccineReminder()
         {
-            var allVaccines = _dbContext.Vaccines.ToList();
-            var vaccines = _dbContext.Vaccines.Where(v => v.NextDueDate != null && v.NextDueDate > DateTime.UtcNow.Date && v.NextDueDate <= DateTime.UtcNow.AddDays(1).Date).ToList();
-            var filteredTest = allVaccines.Where(v => v.NextDueDate == DateTime.UtcNow.Date.AddDays(1)).ToList();
-            var x = vaccines;
+            var vaccines = _dbContext.Vaccines.Include(v => v.Pet).Where(v => v.NextDueDate != null && v.NextDueDate > DateTime.UtcNow.Date && v.NextDueDate <= DateTime.UtcNow.AddDays(1).Date).ToList();
+            foreach (var vaccine in vaccines)
+            {
+                var pet = vaccine.Pet;
+                if (pet == null)
+                {
+                    continue;
+                }
+                var user = _dbContext.Users.FirstOrDefault(u => u.Id == pet.UserId);
+                if (user == null || user.Email == null || user.UserName == null)
+                {
+                    continue;
+                }
+                _emailService.SendEmail(new Email.Models.MailData
+                {
+                    Email = user.Email,
+                    Name = user.UserName,
+                    Subject = $"{pet.Name}'s Vaccine is Due Soon!",
+                    Body = $@"Hi {user.UserName},
+                    <br><br>
+                    Just a friendly reminder that {pet.Name}'s vaccine is due on {vaccine.NextDueDate:MMMM dd, yyyy}.
+                    <br><br>
+                    Don't forget to schedule an appointment with your vet!
+                    <br><br>
+                    Best,
+                    <br>
+                    PetCare"
+                }, MimeKit.Text.TextFormat.Html);
+            }
         }
 
         public Vaccine UpdateVaccine(VaccineDTO vaccineDTO)
