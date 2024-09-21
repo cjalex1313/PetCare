@@ -1,11 +1,21 @@
-﻿using PetCare.Shared.DTOs;
+﻿using Hangfire.Dashboard;
+using PetCare.Shared.DTOs;
 using PetCare.Shared.Exceptions;
 using System.Net;
 using System.Text.Json;
 
 namespace PetCare.Server.Middleware
 {
-  public class ExceptionMiddleware
+    public class MyAuthorizationFilter : IDashboardAuthorizationFilter
+    {
+        public bool Authorize(DashboardContext context)
+        {
+            var httpContext = context.GetHttpContext();
+            // Allow all authenticated users to see the Dashboard (potentially dangerous).
+            return httpContext.User.Identity?.IsAuthenticated ?? false;
+        }
+    }
+    public class ExceptionMiddleware
   {
     private readonly RequestDelegate _next;
     public ExceptionMiddleware(RequestDelegate next)

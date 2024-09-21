@@ -48,6 +48,7 @@ public static class EntityMappings
         entity.Property(e => e.Name).HasMaxLength(128);
         entity.Property(e => e.AdministrationDate).HasColumnType("date");
         entity.Property(e => e.NextDueDate).HasColumnType("date");
+        entity.HasIndex(e => e.NextDueDate);
         entity.HasOne(e => e.Pet).WithMany(p => p.Vaccines).HasForeignKey(e => e.PetId).OnDelete(DeleteBehavior.Cascade);
     }
 }

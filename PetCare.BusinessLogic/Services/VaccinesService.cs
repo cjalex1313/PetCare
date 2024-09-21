@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PetCare.DataAccess;
 using PetCare.Shared.DTOs;
 using PetCare.Shared.Entities;
@@ -18,6 +19,7 @@ namespace PetCare.BusinessLogic.Services
         Vaccine GetVaccine(Guid id);
         IEnumerable<Vaccine> GetVaccinesForPet(Guid petId);
         Vaccine UpdateVaccine(VaccineDTO vaccineDTO);
+        void SendVaccineReminder();
     }
 
     internal class VaccinesService : IVaccinesService
@@ -55,6 +57,14 @@ namespace PetCare.BusinessLogic.Services
         {
             var vaccines = _dbContext.Vaccines.Where(v => v.PetId == petId).ToList();
             return vaccines;
+        }
+
+        public void SendVaccineReminder()
+        {
+            var allVaccines = _dbContext.Vaccines.ToList();
+            var vaccines = _dbContext.Vaccines.Where(v => v.NextDueDate != null && v.NextDueDate > DateTime.UtcNow.Date && v.NextDueDate <= DateTime.UtcNow.AddDays(1).Date).ToList();
+            var filteredTest = allVaccines.Where(v => v.NextDueDate == DateTime.UtcNow.Date.AddDays(1)).ToList();
+            var x = vaccines;
         }
 
         public Vaccine UpdateVaccine(VaccineDTO vaccineDTO)

@@ -11,6 +11,9 @@ using PetCare.BusinessLogic.Services;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using PetCare.Server.Mappers;
+using Hangfire;
+using HangfireBasicAuthenticationFilter;
+using PetCare.BusinessLogic.BackgroundJobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +84,13 @@ builder.Services.AddSwaggerGen(options =>
                     }
                 });
 });
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseInMemoryStorage());
+
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -95,6 +105,15 @@ else
     app.UseHttpsRedirection();
 }
 
+var options = new DashboardOptions
+{
+    Authorization = new[] { new HangfireCustomBasicAuthenticationFilter { User = appSettings.HangfireSettings.Username, Pass = appSettings.HangfireSettings.Password } }
+};
+
+
+
+app.UseHangfireDashboard("/hangfire", options);
+
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors(builder => builder
@@ -106,6 +125,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHangfireDashboard();
 
 using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
@@ -143,5 +163,7 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
     scope.ServiceProvider.GetService<IAuthService>()
         ?.EnsureAdminExists().Wait();
 }
+
+JobsScheduler.RegisterRecurringJobs();
 
 app.Run();
