@@ -15,7 +15,6 @@ export default function LoginScreen() {
   const router = useRouter();
 
   const tryLogin = async () => {
-    console.log(1);
     const loginResponse = await authApi.login(username, password);
     await AsyncStorage.setItem('JWT', loginResponse.accessToken);
     dispatch(setIsLoggedIn(true))
