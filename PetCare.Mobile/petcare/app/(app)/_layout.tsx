@@ -17,5 +17,8 @@ export default function AppLayout() {
     <Stack.Screen name="addCat" options={{
       title: 'Add Cat'
     }} />
+    <Stack.Screen name="addDog" options={{
+      title: 'Add Dog'
+    }} />
   </Stack>;
 }

@@ -93,7 +93,9 @@ export default function HomeScreen() {
     router.push("./addCat");
   };
 
-  const goToAddDog = () => {};
+  const goToAddDog = () => {
+    router.push("./addDog");
+  };
 
   return (
     <View padding-20>

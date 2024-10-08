@@ -10,3 +10,16 @@ export interface PetDTO {
   dateOfBirth: Date;
   petType: PetType
 }
+
+export interface CatDTO extends PetDTO {
+
+}
+
+export interface DogDTO extends PetDTO {
+  
+}
+
+export enum Sex {
+  Male,
+  Female
+}

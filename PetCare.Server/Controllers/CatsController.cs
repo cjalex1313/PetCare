@@ -20,10 +20,10 @@ public class CatsController : BaseController
     }
 
     [HttpPost]
-    public ActionResult<BaseResponseWithData<CatDTO>> AddCat([FromBody] AddPetRequest request)
+    public ActionResult<CatDTO> AddCat([FromBody] AddPetRequest request)
     {
         var userId = GetUserId();
         var result = _catsService.AddCat(new CatDTO { Name = request.Name, DateOfBirth = request.DateOfBirth, Sex = request.Sex }, userId);
-        return Ok(new BaseResponseWithData<CatDTO>(result));
+        return Ok(result);
     }
 }

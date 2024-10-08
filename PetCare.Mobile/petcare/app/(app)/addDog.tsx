@@ -2,12 +2,12 @@ import { Stack, useRouter } from "expo-router";
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, IconButton, List, RadioButton, TextInput } from "react-native-paper";
-import catsApi from "@/api/catsApi";
+import dogsApi from "@/api/dogsApi";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
-export default function AddCatScreen() {
+export default function AddDogScreen() {
   const [name, setName] = useState<string>("");
   const [dob, setDob] = useState<Date>(new Date());
   const [datePickerOpen, setDatePickerOpen] = useState<boolean>(false);
@@ -25,9 +25,9 @@ export default function AddCatScreen() {
     }
   };
 
-  const addCat = async () => {
+  const addDog = async () => {
     if (name && dob) {
-      await catsApi.addCat(name, dob, sex);
+      await dogsApi.addDog(name, dob, sex);
       router.back();
     }
   }
@@ -75,8 +75,8 @@ export default function AddCatScreen() {
           </View>
         </RadioButton.Group>
         </List.Section>
-        <Button mode="contained" onPress={addCat} style={styles.button}>
-          Add cat
+        <Button mode="contained" onPress={addDog} style={styles.button}>
+          Add dog
         </Button>
       </View>
     </View>
