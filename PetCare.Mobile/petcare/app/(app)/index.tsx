@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import petApi from "@/api/petApi";
 import { useDispatch, useSelector } from "react-redux";
-import { setPets } from "@/store/pets";
 import { IRootState } from "@/store/store";
 import { PetDTO, PetType } from "@/api/types/pets";
-import { FlatList, StyleSheet, View, Text } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialIcons from "@expo/vector-icons/build/MaterialIcons";
-import AntDesign from "@expo/vector-icons/build/AntDesign";
 import {
-  Appbar,
-  Button,
   FAB,
   IconButton,
   List,
@@ -37,9 +33,21 @@ export default function HomeScreen() {
     router.replace("/login");
   };
 
-  const pets = useSelector<IRootState, PetDTO[]>((state) => state.pets.pets);
+  // const pets = useSelector<IRootState, PetDTO[]>((state) => state.pets.pets);
+  const [pets, setPets] = useState<PetDTO[]>([]);
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
   const [fabOpen, setFabOpen] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await loadPets();
+    }
+    finally {
+      setRefreshing(false);
+    }
+  }
 
   useEffect(() => {
     if (isFocused) {
@@ -49,11 +57,18 @@ export default function HomeScreen() {
 
   const loadPets = async () => {
     const pets = await petApi.getPets();
-    dispatch(setPets(pets));
+    setPets(pets);
   };
 
   const petClicked = (pet: PetDTO) => {
-    console.log(pet.name);
+    router.push({
+      pathname: '/(app)/pet/(tabs)/',
+      params: {
+        id: pet.id,
+        name: pet.name,
+        petType: pet.petType
+      }
+    })
   };
 
   const renderPetIcon = (petType: PetType) => {
@@ -64,17 +79,6 @@ export default function HomeScreen() {
       return <FontAwesome5 name="dog" size={24} color="black" />;
     }
     return <MaterialIcons name="pets" size={24} color="black" />;
-  };
-
-  const renderPetItem = (pet: PetDTO) => {
-    return (
-      <List.Item
-        style={{ padding: 10 }}
-        title={pet.name}
-        onPress={() => petClicked(pet)}
-        left={() => renderPetIcon(pet.petType)}
-      />
-    );
   };
 
   const openMenu = () => {
@@ -97,8 +101,19 @@ export default function HomeScreen() {
     router.push("./addDog");
   };
 
+  const renderPetItem = (pet: PetDTO) => {
+    return (
+      <List.Item
+        style={{ padding: 10 }}
+        title={pet.name}
+        onPress={() => petClicked(pet)}
+        left={() => renderPetIcon(pet.petType)}
+      />
+    );
+  };
+
   return (
-    <View padding-20>
+    <View padding-20 style={{flex: 1}}>
       <Stack.Screen
         options={{
           headerRight: () => (
@@ -116,7 +131,10 @@ export default function HomeScreen() {
         }}
       />
       <FlatList
+      style={styles.list}
         data={pets}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         renderItem={({ item }) => renderPetItem(item)}
         keyExtractor={(item) => item.id}
       />
@@ -158,4 +176,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  list: {
+    flex: 1
+  }
 });
