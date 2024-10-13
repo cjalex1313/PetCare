@@ -20,3 +20,9 @@ export const handleDates = (data: unknown) => {
 
   return data
 };
+
+export function adjustForTimezone(date: Date): Date {
+  let offsetInMinutes = date.getTimezoneOffset();
+  let offsetInMilliseconds = offsetInMinutes * 60 * 1000;
+  return new Date(date.getTime() + (-1 * offsetInMilliseconds));
+}

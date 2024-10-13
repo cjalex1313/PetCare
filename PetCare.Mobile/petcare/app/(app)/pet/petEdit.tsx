@@ -1,13 +1,18 @@
-import { Stack, useRouter } from "expo-router";
-import { useState } from "react";
+import { Stack, useGlobalSearchParams, useNavigation, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, IconButton, List, RadioButton, TextInput } from "react-native-paper";
-import catsApi from "@/api/catsApi";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import petApi from "@/api/petApi";
+import { PetDTO } from "@/api/types/pets";
 
 export default function AddCatScreen() {
+  const { id } = useGlobalSearchParams();
+  const navigation = useNavigation();
+
+  const [pet, setPet] = useState<PetDTO>();
   const [name, setName] = useState<string>("");
   const [dob, setDob] = useState<Date>(new Date());
   const [datePickerOpen, setDatePickerOpen] = useState<boolean>(false);
@@ -25,12 +30,33 @@ export default function AddCatScreen() {
     }
   };
 
-  const addCat = async () => {
-    if (name && dob) {
-      await catsApi.addCat(name, dob, sex);
+  const updatePet = async () => {
+    if (pet) {
+      await petApi.updatePet({
+        id: pet.id,
+        name: name,
+        dateOfBirth: dob,
+        sex: sex,
+        petType: pet.petType
+      })
       router.back();
     }
   }
+
+  const loadPet = async () => {
+    const petDTO = await petApi.getPet(id as string);
+    setPet(petDTO);
+    setName(petDTO.name);
+    setSex(petDTO.sex);
+    setDob(petDTO.dateOfBirth);
+    navigation.setOptions({
+      title: `Edit ${petDTO.name}`
+    })
+  }
+
+  useEffect(() => {
+    loadPet();
+  }, [])
 
   return (
     <View padding-20>
@@ -75,8 +101,8 @@ export default function AddCatScreen() {
           </View>
         </RadioButton.Group>
         </List.Section>
-        <Button mode="contained" onPress={addCat} style={styles.button}>
-          Add cat 2
+        <Button mode="contained" onPress={updatePet} style={styles.button}>
+          Update pet
         </Button>
       </View>
     </View>

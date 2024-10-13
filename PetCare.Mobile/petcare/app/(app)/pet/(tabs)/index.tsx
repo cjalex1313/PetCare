@@ -1,7 +1,8 @@
 import petApi from '@/api/petApi';
 import { PetDTO } from '@/api/types/pets';
 import { displayPetSex, displayPetType } from '@/utils/petUtils';
-import { Stack, useGlobalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { useIsFocused } from '@react-navigation/native';
+import { Stack, useGlobalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, List } from 'react-native-paper';
@@ -11,11 +12,15 @@ export default function Tab() {
   const { id, petType } = useGlobalSearchParams();
   const router = useRouter();
 
+  const isFocused = useIsFocused()
+
   const [pet, setPet] = useState<PetDTO | undefined>();
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (isFocused) {
+      loadData();
+    }
+  }, [isFocused]);
 
   const loadData = async () => {
     const petResponse = await petApi.getPet(id as string);
@@ -23,10 +28,14 @@ export default function Tab() {
   }
 
   const editPet = () => {
-    console.log(1);
-    router.push({
-      pathname: '/(app)/pet/petEdit'
-    })
+    if (pet) {
+      router.push({
+        pathname: '/(app)/pet/petEdit',
+        params: {
+          id: pet.id,
+        }
+      })
+    }
   }
 
   return (

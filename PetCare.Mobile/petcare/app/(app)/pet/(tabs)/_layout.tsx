@@ -20,7 +20,6 @@ export default function TabLayout() {
 
   useEffect(() => {
     if (isFocused) {
-      console.log('loads data')
       loadData();
     }
   }, [isFocused])
