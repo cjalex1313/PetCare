@@ -14,5 +14,14 @@ export default function AppLayout() {
     <Stack.Screen name="index" options={{
       title: 'Home'
     }} />
+    <Stack.Screen name="addCat" options={{
+      title: 'Add Cat'
+    }} />
+    <Stack.Screen name="addDog" options={{
+      title: 'Add Dog'
+    }} />
+    <Stack.Screen
+      name="pet/(tabs)"
+    />
   </Stack>;
 }
