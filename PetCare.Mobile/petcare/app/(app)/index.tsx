@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import petApi from '@/api/petApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPets } from '@/store/pets'
@@ -7,8 +7,7 @@ import { PetDTO, PetType } from '@/api/types/pets';
 import { FlatList, StyleSheet, View, Text } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/build/MaterialIcons';
-import AntDesign from '@expo/vector-icons/build/AntDesign';
-import { Appbar, Button, IconButton, List } from 'react-native-paper';
+import { IconButton, List, Menu } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Stack, useRouter } from 'expo-router';
 
@@ -18,7 +17,6 @@ export default function HomeScreen() {
   const router = useRouter();
 
   const logOut = async () => {
-    console.log('log out')
     const token = await AsyncStorage.getItem('JWT');
     if (token) {
       await AsyncStorage.clear()
@@ -27,6 +25,7 @@ export default function HomeScreen() {
   }
 
   const pets = useSelector<IRootState, PetDTO[]>((state) => state.pets.pets);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   useEffect(() => {
     loadPets()
@@ -65,19 +64,25 @@ export default function HomeScreen() {
     <View padding-20>
       <Stack.Screen
         options={{
-          headerRight: () => <IconButton
-            icon="plus"
-            size={20}
-            onPress={() => console.log('Pressed')}
-          />
+          headerRight: () => <Menu
+            visible={isMenuOpen}
+            onDismiss={() => setIsMenuOpen(false)}
+            anchorPosition='bottom'
+            anchor={<IconButton
+              icon="dots-vertical"
+              size={20}
+              onPress={() => setIsMenuOpen(true)}
+            />}>
+            <Menu.Item onPress={logOut} title="Logout" />
+          </Menu>
         }}
       />
+
       <FlatList
         data={pets}
         renderItem={({ item }) => renderPetItem(item)}
         keyExtractor={item => item.id}
       />
-      <Button onPress={logOut} mode='contained'>Logout</Button>
     </View >
   );
 }
