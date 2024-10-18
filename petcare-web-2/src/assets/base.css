@@ -1,2 +1,6 @@
 /* color palette from <https://github.com/vuejs/theme> */
 @import 'primeicons/primeicons.css';
+
+.p-toast {
+  max-width: calc(100vw - 40px);
+}

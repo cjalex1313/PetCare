@@ -9,6 +9,7 @@
         inputClass="w-64"
         id="password"
         v-model="loginData.password"
+        @keypress.enter="tryLogin"
         :feedback="false"
         toggleMask
       />

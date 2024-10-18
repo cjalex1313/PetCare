@@ -5,7 +5,8 @@
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <!-- Mobile menu button -->
           <button
-            @click="toggleMobileMenu(true)"
+            @click="toggleMobileMenu(!mobileMenuOpen)"
+            ref="mobileMenuRef"
             type="button"
             class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
             aria-controls="mobile-menu"
@@ -51,11 +52,7 @@
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="flex flex-shrink-0 items-center">
-            <img
-              class="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
-            />
+            <img class="h-12 w-auto" src="@/assets/logo.png" alt="Your Company" />
           </div>
           <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
             <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
@@ -125,7 +122,13 @@
     </div>
 
     <!-- Mobile menu, show/hide based on menu state. -->
-    <OnClickOutside v-if="mobileMenuOpen" @trigger="toggleMobileMenu(false)">
+    <OnClickOutside
+      v-if="mobileMenuOpen"
+      @trigger="toggleMobileMenu(false)"
+      :options="{
+        ignore: [mobileMenuRef]
+      }"
+    >
       <div class="sm:hidden" id="mobile-menu">
         <div class="space-y-1 pb-4 pt-2">
           <!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
@@ -149,11 +152,13 @@ import { ref } from 'vue';
 const showContextMenu = ref<boolean>(false);
 const mobileMenuOpen = ref<boolean>(false);
 
+const mobileMenuRef = ref();
+
 const toggleContextMenu = (val: boolean) => {
   showContextMenu.value = val;
 };
 
-const toggleMobileMenu = (val: boolean) => {
+const toggleMobileMenu = (val: boolean, ev: any = null) => {
   mobileMenuOpen.value = val;
 };
 </script>
