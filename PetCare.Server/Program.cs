@@ -161,6 +161,6 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
         ?.EnsureAdminExists().Wait();
 }
 
-JobsScheduler.RegisterRecurringJobs();
+//JobsScheduler.RegisterRecurringJobs();
 
 app.Run();
