@@ -84,13 +84,13 @@ builder.Services.AddSwaggerGen(options =>
                     }
                 });
 });
-builder.Services.AddHangfire(config => config
-    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-    .UseSimpleAssemblyNameTypeSerializer()
-    .UseRecommendedSerializerSettings()
-    .UseInMemoryStorage());
+//builder.Services.AddHangfire(config => config
+//    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+//    .UseSimpleAssemblyNameTypeSerializer()
+//    .UseRecommendedSerializerSettings()
+//    .UseInMemoryStorage());
 
-builder.Services.AddHangfireServer();
+//builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -105,14 +105,11 @@ else
     app.UseHttpsRedirection();
 }
 
-var options = new DashboardOptions
-{
-    Authorization = new[] { new HangfireCustomBasicAuthenticationFilter { User = appSettings.HangfireSettings.Username, Pass = appSettings.HangfireSettings.Password } }
-};
-
-
-
-app.UseHangfireDashboard("/hangfire", options);
+//var options = new DashboardOptions
+//{
+//    Authorization = new[] { new HangfireCustomBasicAuthenticationFilter { User = appSettings.HangfireSettings.Username, Pass = appSettings.HangfireSettings.Password } }
+//};
+//app.UseHangfireDashboard("/hangfire", options);
 
 app.UseMiddleware<ExceptionMiddleware>();
 
@@ -125,7 +122,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHangfireDashboard();
+//app.MapHangfireDashboard();
 
 using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
