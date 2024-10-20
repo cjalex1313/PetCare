@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS bld
 FROM bld AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["PetCare.Server/PetCare.Server.csproj", "PetCare.Server/"]
+COPY ["PetCare.Server.csproj", "PetCare.Server/"]
 RUN dotnet restore "./PetCare.Server/PetCare.Server.csproj"
 COPY . .
 WORKDIR "/src/PetCare.Server"
