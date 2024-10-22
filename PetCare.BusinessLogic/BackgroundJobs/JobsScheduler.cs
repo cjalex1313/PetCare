@@ -12,7 +12,7 @@ namespace PetCare.BusinessLogic.BackgroundJobs
     {
         public static void RegisterRecurringJobs()
         {
-            RecurringJob.AddOrUpdate<IVaccinesService>("vaccine-reminder-job", (s) => s.SendVaccineReminder(), Cron.Daily(1));
+            RecurringJob.AddOrUpdate<IUpcomingVaccinesService>("vaccine-reminder-job", (s) => s.SendVaccineReminder(), Cron.Daily(1));
         }
     }
 }

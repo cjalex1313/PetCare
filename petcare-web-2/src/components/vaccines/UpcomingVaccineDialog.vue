@@ -6,12 +6,8 @@
         <label for="name">Name</label>
       </FloatLabel>
       <FloatLabel class="mb-8">
-        <DatePicker
-          id="administrationDate"
-          v-model="localVaccine.administrationDate"
-          dateFormat="dd/mm/yy"
-        />
-        <label for="administrationDate">Administration date</label>
+        <DatePicker id="date" v-model="localVaccine.date" dateFormat="dd/mm/yy" />
+        <label for="date">Date</label>
       </FloatLabel>
       <FloatLabel class="mb-8">
         <InputText id="notes" v-model="localVaccine.notes" />
@@ -31,16 +27,16 @@ import FloatLabel from 'primevue/floatlabel';
 import InputText from 'primevue/inputtext';
 import { inject, type Ref, onMounted, ref, watch } from 'vue';
 import { addYears } from 'date-fns';
-import type { VaccineDTO } from '@/types/dtos/vaccineDTO';
+import type { UpcomingVaccineDTO, VaccineDTO } from '@/types/dtos/vaccineDTO';
 import type { DynamicDialogInstance } from 'primevue/dynamicdialogoptions';
 import { emptyGuid } from '@/types/constants';
-import { useVaccinesApi } from '@/api/vaccineApi';
+import { useUpcomingVaccinesApi } from '@/api/upcomingVaccineApi';
 
-const vaccinesApi = useVaccinesApi();
+const upcomingVaccineApi = useUpcomingVaccinesApi();
 
 const dialogRef = inject<Ref<DynamicDialogInstance>>('dialogRef');
 
-const localVaccine = ref<VaccineDTO>();
+const localVaccine = ref<UpcomingVaccineDTO>();
 const isLoaded = ref<boolean>(false);
 
 const closeDialog = (shouldReload: boolean) => {
@@ -54,17 +50,16 @@ const saveVaccine = async () => {
     return;
   }
   if (localVaccine.value.id == emptyGuid) {
-    await vaccinesApi.addVaccine(localVaccine.value);
+    await upcomingVaccineApi.addUpcomingVaccine(localVaccine.value);
   } else {
-    await vaccinesApi.updateVaccine(localVaccine.value);
+    await upcomingVaccineApi.updateUpcomingVaccine(localVaccine.value);
   }
   closeDialog(true);
 };
 
 onMounted(() => {
   const petId: string = dialogRef?.value.data.petId;
-  const vaccine: VaccineDTO = dialogRef?.value.data.vaccine;
-  const suggestedName: string = dialogRef?.value?.data?.suggestedName;
+  const vaccine: UpcomingVaccineDTO = dialogRef?.value.data.vaccine;
   if (vaccine) {
     localVaccine.value = {
       ...vaccine
@@ -74,12 +69,9 @@ onMounted(() => {
       id: emptyGuid,
       petId: petId,
       name: '',
-      administrationDate: new Date(),
+      date: addYears(new Date(), 1),
       notes: ''
     };
-    if (suggestedName) {
-      localVaccine.value.name = suggestedName;
-    }
   }
   isLoaded.value = true;
 });

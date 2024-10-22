@@ -47,8 +47,15 @@ public static class EntityMappings
         entity.HasKey(e => e.Id);
         entity.Property(e => e.Name).HasMaxLength(128);
         entity.Property(e => e.AdministrationDate).HasColumnType("date");
-        entity.Property(e => e.NextDueDate).HasColumnType("date");
-        entity.HasIndex(e => e.NextDueDate);
         entity.HasOne(e => e.Pet).WithMany(p => p.Vaccines).HasForeignKey(e => e.PetId).OnDelete(DeleteBehavior.Cascade);
+    }
+
+    public static void MapUpcomingVaccines(EntityTypeBuilder<UpcomingVaccine> entity)
+    {
+        entity.ToTable("UpcomingVaccines");
+        entity.HasKey(e => e.Id);
+        entity.Property(e => e.Name).HasMaxLength(128);
+        entity.Property(e => e.Date).HasColumnType("date");
+        entity.HasOne(e => e.Pet).WithMany(p => p.UpcomingVaccines).HasForeignKey(e => e.PetId).OnDelete(DeleteBehavior.Cascade);
     }
 }

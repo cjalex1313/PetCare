@@ -15,6 +15,7 @@ namespace PetCare.DataAccess
         public DbSet<Cat> Cats { get; set; }
         public DbSet<Dog> Dogs { get; set; }
         public DbSet<Vaccine> Vaccines { get; set; }
+        public DbSet<UpcomingVaccine> UpcomingVaccines { get; set; }
 
         public PetDbContext(DbContextOptions<PetDbContext> options) : base(options) { }
 
@@ -26,6 +27,7 @@ namespace PetCare.DataAccess
             EntityMappings.MapCats(builder.Entity<Cat>());
             EntityMappings.MapDogs(builder.Entity<Dog>());
             EntityMappings.MapVaccines(builder.Entity<Vaccine>());
+            EntityMappings.MapUpcomingVaccines(builder.Entity<UpcomingVaccine>());
         }
     }
 }

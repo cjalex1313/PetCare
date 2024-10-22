@@ -8,6 +8,7 @@ public class Pet
     public DateTime DateOfBirth { get; set; }
     public Sex Sex { get; set; }
     public virtual ICollection<Vaccine>? Vaccines { get; set; }
+    public virtual ICollection<UpcomingVaccine>? UpcomingVaccines { get; set; }
 }
 
 public enum Sex

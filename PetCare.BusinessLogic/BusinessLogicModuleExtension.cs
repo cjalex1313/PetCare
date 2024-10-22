@@ -17,6 +17,7 @@ namespace PetCare.BusinessLogic
             services.AddScoped<ICatsService, CatsService>();
             services.AddScoped<IDogService, DogService>();
             services.AddScoped<IVaccinesService, VaccinesService>();
+            services.AddScoped<IUpcomingVaccinesService, UpcomingVaccinesService>();
         }
     }
 }
