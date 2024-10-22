@@ -12,8 +12,8 @@ using PetCare.DataAccess;
 namespace PetCare.DataAccess.Migrations
 {
     [DbContext(typeof(PetDbContext))]
-    [Migration("20240921001018_VaccineNextDueDateIndex")]
-    partial class VaccineNextDueDateIndex
+    [Migration("20241022194639_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -282,9 +282,6 @@ namespace PetCare.DataAccess.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.Property<DateTime?>("NextDueDate")
-                        .HasColumnType("date");
-
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
@@ -292,8 +289,6 @@ namespace PetCare.DataAccess.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NextDueDate");
 
                     b.HasIndex("PetId");
 

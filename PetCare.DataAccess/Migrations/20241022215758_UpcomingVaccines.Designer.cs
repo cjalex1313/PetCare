@@ -12,8 +12,8 @@ using PetCare.DataAccess;
 namespace PetCare.DataAccess.Migrations
 {
     [DbContext(typeof(PetDbContext))]
-    [Migration("20240919141503_NextDueDateNullable")]
-    partial class NextDueDateNullable
+    [Migration("20241022215758_UpcomingVaccines")]
+    partial class UpcomingVaccines
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -268,6 +268,33 @@ namespace PetCare.DataAccess.Migrations
                     b.UseTptMappingStrategy();
                 });
 
+            modelBuilder.Entity("PetCare.Shared.Entities.UpcomingVaccine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("PetId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PetId");
+
+                    b.ToTable("UpcomingVaccines", (string)null);
+                });
+
             modelBuilder.Entity("PetCare.Shared.Entities.Vaccine", b =>
                 {
                     b.Property<Guid>("Id")
@@ -281,9 +308,6 @@ namespace PetCare.DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
-
-                    b.Property<DateTime?>("NextDueDate")
-                        .HasColumnType("date");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -372,6 +396,17 @@ namespace PetCare.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PetCare.Shared.Entities.UpcomingVaccine", b =>
+                {
+                    b.HasOne("PetCare.Shared.Entities.Pets.Pet", "Pet")
+                        .WithMany("UpcomingVaccines")
+                        .HasForeignKey("PetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pet");
+                });
+
             modelBuilder.Entity("PetCare.Shared.Entities.Vaccine", b =>
                 {
                     b.HasOne("PetCare.Shared.Entities.Pets.Pet", "Pet")
@@ -403,6 +438,8 @@ namespace PetCare.DataAccess.Migrations
 
             modelBuilder.Entity("PetCare.Shared.Entities.Pets.Pet", b =>
                 {
+                    b.Navigation("UpcomingVaccines");
+
                     b.Navigation("Vaccines");
                 });
 #pragma warning restore 612, 618
