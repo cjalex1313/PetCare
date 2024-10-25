@@ -27,12 +27,10 @@ namespace PetCare.BusinessLogic.Services
     internal class VaccinesService : IVaccinesService
     {
         private readonly PetDbContext _dbContext;
-        private readonly IEmailService _emailService;
 
-        public VaccinesService(PetDbContext dbContext, IEmailService emailService)
+        public VaccinesService(PetDbContext dbContext)
         {
             _dbContext = dbContext;
-            _emailService = emailService;
         }
 
         public void AddVaccine(Vaccine vaccine)

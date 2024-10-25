@@ -24,7 +24,7 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpGet("Pet/{petId:guid}")]
-        public IActionResult GetPetVaccines([FromRoute] Guid petId)
+        public ActionResult<IEnumerable<UpcomingVaccineDTO>> GetPetVaccines([FromRoute] Guid petId)
         {
             var userId = GetUserId();
             _petService.VerifyUserCanAccessPet(userId, petId);
@@ -34,7 +34,7 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public IActionResult GetVaccine([FromRoute] Guid id)
+        public ActionResult<UpcomingVaccineDTO> GetVaccine([FromRoute] Guid id)
         {
             var vaccine = _upcomingVaccinesService.GetUpcomingVaccine(id);
             var userId = GetUserId();
@@ -54,7 +54,7 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateVaccine([FromBody] UpcomingVaccineDTO vaccineDTO)
+        public ActionResult<UpcomingVaccineDTO> UpdateVaccine([FromBody] UpcomingVaccineDTO vaccineDTO)
         {
             var vaccine = _upcomingVaccinesService.GetUpcomingVaccine(vaccineDTO.Id);
             var userId = GetUserId();
@@ -65,7 +65,7 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddVaccine([FromBody] UpcomingVaccineDTO vaccineDTO)
+        public ActionResult<UpcomingVaccineDTO> AddVaccine([FromBody] UpcomingVaccineDTO vaccineDTO)
         {
             var userId = GetUserId();
             _petService.VerifyUserCanAccessPet(userId, vaccineDTO.PetId);

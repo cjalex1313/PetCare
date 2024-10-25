@@ -41,15 +41,13 @@ namespace PetCare.BusinessLogic.Services
 
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
         private readonly AppSettings _appSettings;
         private readonly PetDbContext _dbContext;
 
-        public AuthService(UserManager<IdentityUser> userManager, IConfiguration configuration, IEmailService emailService, AppSettings appSettings, RoleManager<IdentityRole> roleManager, PetDbContext petDbContext)
+        public AuthService(UserManager<IdentityUser> userManager, IEmailService emailService, AppSettings appSettings, RoleManager<IdentityRole> roleManager, PetDbContext petDbContext)
         {
             _userManager = userManager;
-            _configuration = configuration;
             _emailService = emailService;
             _appSettings = appSettings;
             _roleManager = roleManager;
