@@ -26,7 +26,7 @@ public class PetService : IPetService
     public IEnumerable<PetDTO> GetUserPets(string userId)
     {
         var result = _dbContext.Pets.Where(p => p.UserId == userId).Select(p => PetDTO.GetDTO(p)).ToList();
-        return result ?? new List<PetDTO>();
+        return result;
     }
 
     public void VerifyUserCanAccessPet(string userId, Guid petId)
