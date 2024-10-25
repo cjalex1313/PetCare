@@ -4,8 +4,8 @@ namespace PetCare.Shared.DTOs.Pets;
 
 public class GetUserPetsResponse : BaseResponse
 {
-    public IEnumerable<PetDTO> Pets { get; set; }
-    public GetUserPetsResponse(IEnumerable<PetDTO> pets)
+    public IEnumerable<PetDto> Pets { get; set; }
+    public GetUserPetsResponse(IEnumerable<PetDto> pets)
     {
         Pets = pets;
         Succeeded = true;

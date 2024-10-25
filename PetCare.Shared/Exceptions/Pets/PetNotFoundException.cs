@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace PetCare.Shared.Exceptions.Pets
 {
-    public class PetNotFoundExpcetion : BaseException
+    public class PetNotFoundException : BaseException
     {
-        public PetNotFoundExpcetion(Guid petId)
+        public PetNotFoundException(Guid petId)
         {
             StatusCode = (int) HttpStatusCode.NotFound;
             ErrorMessage = $"Pet with id {petId} not found";

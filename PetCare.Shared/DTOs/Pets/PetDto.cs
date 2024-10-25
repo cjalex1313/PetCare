@@ -2,7 +2,7 @@ using PetCare.Shared.Entities.Pets;
 
 namespace PetCare.Shared.DTOs.Pets;
 
-public class PetDTO
+public class PetDto
 {
     public Guid Id { get; set; }
     public required string Name { get; set; }
@@ -10,9 +10,9 @@ public class PetDTO
     public PetType PetType { get; set; }
     public Sex Sex { get; set; }
 
-    public static PetDTO GetDTO(Pet pet)
+    public static PetDto GetDTO(Pet pet)
     {
-        return new PetDTO
+        return new PetDto
         {
             Id = pet.Id,
             Name = pet.Name,

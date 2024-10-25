@@ -2,9 +2,9 @@
 
 public class GetUsersResponse
 {
-    public List<UserDTO>? Users { get; set; }
+    public List<UserDto>? Users { get; set; }
 
-    public GetUsersResponse(List<UserDTO> userDTOs)
+    public GetUsersResponse(List<UserDto> userDTOs)
     {
         this.Users = userDTOs;
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PetCare.Shared.DTOs.Pets.Dogs
 {
-    public class DogDTO : PetDTO
+    public class DogDto : PetDto
     {
     }
 }

@@ -68,7 +68,7 @@ namespace PetCare.Server.Controllers
             var username = User.Identity.Name;
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             if (email == null || username == null) {
-                throw new BaseException("Token does not contain username and email claims"); ;
+                throw new BaseException("Token does not contain username and email claims");
             }
             var response = new UserProfile()
             {
@@ -85,7 +85,7 @@ namespace PetCare.Server.Controllers
             var users = await _authService.GetUsers();
             var userDTOs = users.Select(u =>
             {
-                return new UserDTO
+                return new UserDto
                 {
                     Id = u.Id,
                     Username = u.UserName ?? ""

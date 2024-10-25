@@ -22,7 +22,7 @@ public class PetsController : BaseController
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<PetDTO>> GetUserPets()
+    public ActionResult<IEnumerable<PetDto>> GetUserPets()
     {
         var userId = this.GetUserId();
         var pets = _petService.GetUserPets(userId);
@@ -41,7 +41,7 @@ public class PetsController : BaseController
     }
 
     [HttpPut("{id:guid}")]
-    public ActionResult<PetDTO> UpdatePet(PetDTO pet)
+    public ActionResult<PetDto> UpdatePet(PetDto pet)
     {
         var userId = this.GetUserId();
         var dbPet = _petService.GetPet(pet.Id);
@@ -54,7 +54,7 @@ public class PetsController : BaseController
     }
 
     [HttpGet("{id:guid}")]
-    public ActionResult<PetDTO> GetPet([FromRoute] Guid id)
+    public ActionResult<PetDto> GetPet([FromRoute] Guid id)
     {
         var userId = GetUserId();
         Pet pet = _petService.GetPet(id);
@@ -62,7 +62,7 @@ public class PetsController : BaseController
         {
             throw new PetOwnershipException();
         }
-        var dto = PetDTO.GetDTO(pet);
+        var dto = PetDto.GetDTO(pet);
         return Ok(dto);
     }
 }

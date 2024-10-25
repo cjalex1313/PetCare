@@ -10,8 +10,8 @@ public interface IPetService
     void VerifyUserCanAccessPet(string userId, Guid petId);
     void DeletePet(Guid id, string userId);
     Pet GetPet(Guid id);
-    IEnumerable<PetDTO> GetUserPets(string userId);
-    void UpdatePet(PetDTO pet);
+    IEnumerable<PetDto> GetUserPets(string userId);
+    void UpdatePet(PetDto pet);
 }
 
 public class PetService : IPetService
@@ -23,9 +23,9 @@ public class PetService : IPetService
         this._dbContext = dbContext;
     }
 
-    public IEnumerable<PetDTO> GetUserPets(string userId)
+    public IEnumerable<PetDto> GetUserPets(string userId)
     {
-        var result = _dbContext.Pets.Where(p => p.UserId == userId).Select(p => PetDTO.GetDTO(p)).ToList();
+        var result = _dbContext.Pets.Where(p => p.UserId == userId).Select(p => PetDto.GetDTO(p)).ToList();
         return result;
     }
 
@@ -34,7 +34,7 @@ public class PetService : IPetService
         var pet = _dbContext.Pets.FirstOrDefault(p => p.Id == petId);
         if (pet == null)
         {
-            throw new PetNotFoundExpcetion(petId);
+            throw new PetNotFoundException(petId);
         }
         if (pet.UserId != userId)
         {
@@ -47,7 +47,7 @@ public class PetService : IPetService
         var dbPet = _dbContext.Pets.FirstOrDefault(p => p.Id == id);
         if (dbPet == null)
         {
-            throw new PetNotFoundExpcetion(id);
+            throw new PetNotFoundException(id);
         }
         if (dbPet.UserId != userId)
         {
@@ -63,12 +63,12 @@ public class PetService : IPetService
         var dbPet = _dbContext.Pets.FirstOrDefault(p => p.Id == id);
         if (dbPet == null)
         {
-            throw new PetNotFoundExpcetion(id);
+            throw new PetNotFoundException(id);
         }
         return dbPet;
     }
 
-    public void UpdatePet(PetDTO pet)
+    public void UpdatePet(PetDto pet)
     {
         var dbPet = this.GetPet(pet.Id);
         dbPet.Name = pet.Name;

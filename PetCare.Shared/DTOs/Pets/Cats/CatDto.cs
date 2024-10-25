@@ -1,6 +1,6 @@
 ﻿namespace PetCare.Shared.DTOs.Pets.Cats;
 
-public class CatDTO : PetDTO
+public class CatDto : PetDto
 {
 
 }

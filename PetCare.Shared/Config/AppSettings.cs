@@ -8,7 +8,7 @@ namespace PetCare.Shared.Config
 {
     public class AppSettings
     {
-        public required JWTConfig JWTConfig { get; set; }
+        public required JwtConfig JWTConfig { get; set; }
         public required AdminConfig AdminConfig { get; set; }
         public required HangfireSettings HangfireSettings { get; set; }
         public required string EmailConfirmationUrl { get; set; }

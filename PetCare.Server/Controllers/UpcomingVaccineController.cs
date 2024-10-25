@@ -24,22 +24,22 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpGet("Pet/{petId:guid}")]
-        public ActionResult<IEnumerable<UpcomingVaccineDTO>> GetPetVaccines([FromRoute] Guid petId)
+        public ActionResult<IEnumerable<UpcomingVaccineDto>> GetPetVaccines([FromRoute] Guid petId)
         {
             var userId = GetUserId();
             _petService.VerifyUserCanAccessPet(userId, petId);
             var vaccines = _upcomingVaccinesService.GetUpcomingVaccinesForPet(petId);
-            var vaccineDTOs = _mapper.Map<IEnumerable<UpcomingVaccineDTO>>(vaccines);
+            var vaccineDTOs = _mapper.Map<IEnumerable<UpcomingVaccineDto>>(vaccines);
             return Ok(vaccineDTOs);
         }
 
         [HttpGet("{id:guid}")]
-        public ActionResult<UpcomingVaccineDTO> GetVaccine([FromRoute] Guid id)
+        public ActionResult<UpcomingVaccineDto> GetVaccine([FromRoute] Guid id)
         {
             var vaccine = _upcomingVaccinesService.GetUpcomingVaccine(id);
             var userId = GetUserId();
             _petService.VerifyUserCanAccessPet(userId, vaccine.PetId);
-            var dto = _mapper.Map<UpcomingVaccineDTO>(vaccine);
+            var dto = _mapper.Map<UpcomingVaccineDto>(vaccine);
             return Ok(dto);
         }
 
@@ -54,24 +54,24 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpPut]
-        public ActionResult<UpcomingVaccineDTO> UpdateVaccine([FromBody] UpcomingVaccineDTO vaccineDTO)
+        public ActionResult<UpcomingVaccineDto> UpdateVaccine([FromBody] UpcomingVaccineDto vaccineDTO)
         {
             var vaccine = _upcomingVaccinesService.GetUpcomingVaccine(vaccineDTO.Id);
             var userId = GetUserId();
             _petService.VerifyUserCanAccessPet(userId, vaccine.PetId);
             vaccine = _upcomingVaccinesService.UpdateUpcomingVaccine(vaccineDTO);
-            var result = _mapper.Map<UpcomingVaccineDTO>(vaccine);
+            var result = _mapper.Map<UpcomingVaccineDto>(vaccine);
             return Ok(result);
         }
 
         [HttpPost]
-        public ActionResult<UpcomingVaccineDTO> AddVaccine([FromBody] UpcomingVaccineDTO vaccineDTO)
+        public ActionResult<UpcomingVaccineDto> AddVaccine([FromBody] UpcomingVaccineDto vaccineDTO)
         {
             var userId = GetUserId();
             _petService.VerifyUserCanAccessPet(userId, vaccineDTO.PetId);
             var vaccine = _mapper.Map<UpcomingVaccine>(vaccineDTO);
             _upcomingVaccinesService.AddUpcomingVaccine(vaccine);
-            var result = _mapper.Map<UpcomingVaccineDTO>(vaccine);
+            var result = _mapper.Map<UpcomingVaccineDto>(vaccine);
             return Ok(result);
         }
     }

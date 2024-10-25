@@ -8,8 +8,8 @@ namespace PetCare.Server.Mappers
     {
         public VaccineProfile()
         {
-            CreateMap<Vaccine, VaccineDTO>().ReverseMap();
-            CreateMap<UpcomingVaccine, UpcomingVaccineDTO>().ReverseMap();
+            CreateMap<Vaccine, VaccineDto>().ReverseMap();
+            CreateMap<UpcomingVaccine, UpcomingVaccineDto>().ReverseMap();
         }
     }
 }

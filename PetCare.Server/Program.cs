@@ -14,6 +14,7 @@ using PetCare.Server.Mappers;
 using Hangfire;
 using HangfireBasicAuthenticationFilter;
 using PetCare.BusinessLogic.BackgroundJobs;
+using PetCare.Shared.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 var appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
 if (appSettings == null)
 {
-    throw new Exception("Config is corrupt");
+    throw new BaseException("Config is corrupt");
 }
 builder.Services.AddCors();
 builder.Services.AddSingleton<AppSettings>(appSettings);
@@ -39,7 +40,7 @@ builder.Services.AddAuthentication(options =>
     var jwtSecret = appSettings.JWTConfig.Secret;
     if (string.IsNullOrWhiteSpace(jwtSecret))
     {
-        throw new Exception("Invalid JWT config");
+        throw new BaseException("Invalid JWT config");
     }
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
     {
@@ -129,7 +130,7 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
     var petDbContext = scope.ServiceProvider.GetService<PetDbContext>();
     if (petDbContext == null)
     {
-        throw new Exception("Cannot initialize dbContext");
+        throw new BaseException("Cannot initialize dbContext");
     }
     await petDbContext.Database.MigrateAsync();
     var adminRole = await petDbContext.Roles.FirstOrDefaultAsync(r => r.Name == "Admin");

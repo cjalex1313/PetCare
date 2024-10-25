@@ -20,10 +20,10 @@ namespace PetCare.Server.Controllers
         }
 
         [HttpPost]
-        public ActionResult<DogDTO> AddDog([FromBody] AddPetRequest request)
+        public ActionResult<DogDto> AddDog([FromBody] AddPetRequest request)
         {
             var userId = GetUserId();
-            var result = _dogService.AddDog(new DogDTO { Name = request.Name, DateOfBirth = request.DateOfBirth, Sex = request.Sex }, userId);
+            var result = _dogService.AddDog(new DogDto { Name = request.Name, DateOfBirth = request.DateOfBirth, Sex = request.Sex }, userId);
             return Ok(result);
         }
     }

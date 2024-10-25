@@ -13,7 +13,7 @@ namespace PetCare.BusinessLogic.Services
 {
     public interface IDogService
     {
-        DogDTO AddDog(DogDTO dogDTO, string userID);
+        DogDto AddDog(DogDto dogDTO, string userID);
     }
 
     internal class DogService : IDogService
@@ -25,7 +25,7 @@ namespace PetCare.BusinessLogic.Services
             this._dbContext = dbContext;
         }
 
-        public DogDTO AddDog(DogDTO dogDTO, string userID)
+        public DogDto AddDog(DogDto dogDTO, string userID)
         {
             var dogEntity = MapDogEntity(dogDTO, userID);
             _dbContext.Dogs.Add(dogEntity);
@@ -33,13 +33,13 @@ namespace PetCare.BusinessLogic.Services
             return MapDogDTO(dogEntity);
         }
 
-        private Dog MapDogEntity(DogDTO dto, string userID) {
+        private Dog MapDogEntity(DogDto dto, string userID) {
             return new Dog { Id = dto.Id, Name = dto.Name, DateOfBirth = dto.DateOfBirth, UserId = userID, Sex = dto.Sex };
         }
 
-        private DogDTO MapDogDTO(Dog dog)
+        private DogDto MapDogDTO(Dog dog)
         {
-            return new DogDTO { Id = dog.Id, Name = dog.Name, DateOfBirth = dog.DateOfBirth, PetType = Shared.DTOs.Pets.PetType.Dog, Sex = dog.Sex };
+            return new DogDto { Id = dog.Id, Name = dog.Name, DateOfBirth = dog.DateOfBirth, PetType = Shared.DTOs.Pets.PetType.Dog, Sex = dog.Sex };
         }
     }
 }

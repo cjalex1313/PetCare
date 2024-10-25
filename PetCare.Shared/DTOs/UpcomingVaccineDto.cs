@@ -1,6 +1,6 @@
 ﻿namespace PetCare.Shared.DTOs
 {
-    public class UpcomingVaccineDTO
+    public class UpcomingVaccineDto
     {
         public Guid Id { get; set; }
         public Guid PetId { get; set; }

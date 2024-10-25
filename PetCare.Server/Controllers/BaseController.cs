@@ -11,7 +11,7 @@ namespace PetCare.Server.Controllers
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userIdString == null)
             {
-                throw new UserIdIncorrectException(userIdString ?? "");
+                throw new UserIdIncorrectException("");
             }
             return userIdString;
         }

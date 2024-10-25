@@ -18,7 +18,7 @@ namespace PetCare.BusinessLogic.Services
         void DeleteUpcomingVaccine(UpcomingVaccine vaccine);
         UpcomingVaccine GetUpcomingVaccine(Guid id);
         IEnumerable<UpcomingVaccine> GetUpcomingVaccinesForPet(Guid petId);
-        UpcomingVaccine UpdateUpcomingVaccine(UpcomingVaccineDTO vaccineDTO);
+        UpcomingVaccine UpdateUpcomingVaccine(UpcomingVaccineDto vaccineDTO);
         void SendVaccineReminder();
     }
 
@@ -94,7 +94,7 @@ namespace PetCare.BusinessLogic.Services
             }
         }
 
-        public UpcomingVaccine UpdateUpcomingVaccine(UpcomingVaccineDTO vaccineDTO)
+        public UpcomingVaccine UpdateUpcomingVaccine(UpcomingVaccineDto vaccineDTO)
         {
             var vaccine = _dbContext.UpcomingVaccines.FirstOrDefault(v => v.Id == vaccineDTO.Id);
             if (vaccine == null)

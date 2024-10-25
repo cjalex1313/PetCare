@@ -21,7 +21,7 @@ namespace PetCare.BusinessLogic.Services
         void DeleteVaccine(Vaccine vaccine);
         Vaccine GetVaccine(Guid id);
         IEnumerable<Vaccine> GetVaccinesForPet(Guid petId);
-        Vaccine UpdateVaccine(VaccineDTO vaccineDTO);
+        Vaccine UpdateVaccine(VaccineDto vaccineDTO);
     }
 
     internal class VaccinesService : IVaccinesService
@@ -61,7 +61,7 @@ namespace PetCare.BusinessLogic.Services
             return vaccines;
         }
 
-        public Vaccine UpdateVaccine(VaccineDTO vaccineDTO)
+        public Vaccine UpdateVaccine(VaccineDto vaccineDTO)
         {
             var vaccine = _dbContext.Vaccines.FirstOrDefault(v => v.Id ==  vaccineDTO.Id);
             if (vaccine == null)

@@ -37,9 +37,8 @@ namespace PetCare.Server.Middleware
     {
       context.Response.ContentType = "application/json";
       context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-      if (exception is BaseException)
+      if (exception is BaseException baseEx)
       {
-        var baseEx = (BaseException)exception;
         context.Response.StatusCode = baseEx.StatusCode;
         var response = new BaseResponse()
         {

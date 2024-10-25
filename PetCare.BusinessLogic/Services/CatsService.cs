@@ -11,7 +11,7 @@ namespace PetCare.BusinessLogic.Services
 {
     public interface ICatsService
     {
-        CatDTO AddCat(CatDTO catDTO, string userId);
+        CatDto AddCat(CatDto catDTO, string userId);
     }
 
     internal class CatsService : ICatsService
@@ -23,7 +23,7 @@ namespace PetCare.BusinessLogic.Services
             this._dbContext = dbContext;
         }
 
-        public CatDTO AddCat(CatDTO catDTO, string userId)
+        public CatDto AddCat(CatDto catDTO, string userId)
         {
             var catEntity = MapCatEntity(catDTO, userId);
             _dbContext.Cats.Add(catEntity);
@@ -31,7 +31,7 @@ namespace PetCare.BusinessLogic.Services
             return MapCatDTO(catEntity);
         }
 
-        private Cat MapCatEntity(CatDTO catDTO, string userId)
+        private Cat MapCatEntity(CatDto catDTO, string userId)
         {
             if (catDTO == null)
             {
@@ -40,13 +40,13 @@ namespace PetCare.BusinessLogic.Services
             return new Cat { Id = catDTO.Id, Name = catDTO.Name, DateOfBirth = catDTO.DateOfBirth, UserId = userId, Sex = catDTO.Sex };
         }
 
-        private CatDTO MapCatDTO(Cat cat)
+        private CatDto MapCatDTO(Cat cat)
         {
             if (cat == null)
             {
                 return null;
             }
-            return new CatDTO { Id = cat.Id, Name = cat.Name, DateOfBirth = cat.DateOfBirth, PetType = Shared.DTOs.Pets.PetType.Cat, Sex = cat.Sex };
+            return new CatDto { Id = cat.Id, Name = cat.Name, DateOfBirth = cat.DateOfBirth, PetType = Shared.DTOs.Pets.PetType.Cat, Sex = cat.Sex };
         }
     }
 }
