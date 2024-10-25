@@ -31,5 +31,3 @@ const goToPetPage = () => {
   });
 };
 </script>
-
-<style lang="css" scoped></style>

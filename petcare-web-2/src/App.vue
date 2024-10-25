@@ -21,5 +21,3 @@ onMounted(() => {
     <DynamicDialog></DynamicDialog>
   </div>
 </template>
-
-<style scoped></style>
