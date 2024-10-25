@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PetCare.Shared.DTOs.HealthCheck;
 
 namespace PetCare.Server.Controllers
 {
@@ -10,11 +11,11 @@ namespace PetCare.Server.Controllers
     public class HealthChecksController : ControllerBase
     {
         [HttpGet("Ping")]
-        public IActionResult Ping()
+        public ActionResult<PingDto> Ping()
         {
-            return Ok(new
+            return Ok(new PingDto()
             {
-                DateTime = DateTime.UtcNow,
+                Date = DateTime.UtcNow,
             });
         }
     }
