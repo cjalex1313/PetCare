@@ -131,8 +131,8 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
     {
         throw new Exception("Cannot initialize dbContext");
     }
-    petDbContext.Database.Migrate();
-    var adminRole = petDbContext.Roles.FirstOrDefault(r => r.Name == "Admin");
+    await petDbContext.Database.MigrateAsync();
+    var adminRole = await petDbContext.Roles.FirstOrDefaultAsync(r => r.Name == "Admin");
     if (adminRole == null)
     {
         petDbContext.Roles.Add(new IdentityRole()
@@ -142,7 +142,7 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
             ConcurrencyStamp = "1"
         });
     }
-    var userRole = petDbContext.Roles.FirstOrDefault(r => r.Name == "User");
+    var userRole = await petDbContext.Roles.FirstOrDefaultAsync(r => r.Name == "User");
     if (userRole == null)
     {
         petDbContext.Roles.Add(new IdentityRole()
@@ -152,7 +152,7 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
             ConcurrencyStamp = "2"
         });
     }
-    petDbContext.SaveChanges();
+    await petDbContext.SaveChangesAsync();
 }
 
 using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())

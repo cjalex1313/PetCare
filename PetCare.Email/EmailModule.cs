@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PetCare.Shared.Exceptions;
 
 namespace PetCare.Email
 {
@@ -16,7 +17,7 @@ namespace PetCare.Email
             var emailConfig = builderConfiguration.GetSection("EmailConfig").Get<EmailConfig>();
             if (emailConfig == null)
             {
-                throw new Exception("Error - incorrect email config - unable to map email config");
+                throw new BaseException("Error - incorrect email config - unable to map email config");
             }
             services.AddSingleton<EmailConfig>(emailConfig);
             services.AddScoped<IEmailService, EmailService>();
