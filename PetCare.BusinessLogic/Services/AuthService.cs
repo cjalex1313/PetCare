@@ -73,7 +73,7 @@ namespace PetCare.BusinessLogic.Services
                 var result = await _userManager.ResetPasswordAsync(admin, token, adminPassowrd);
                 if (!result.Succeeded)
                 {
-                    throw new Exception("Error while setting admin password");
+                    throw new BaseException("Error while setting admin password");
                 }
 
                 var roles = await _userManager.GetRolesAsync(admin);
@@ -225,7 +225,7 @@ namespace PetCare.BusinessLogic.Services
                 throw new BaseException("User not found for refresh token generation");
             }
 
-            var dbRefreshToken = _dbContext.UserRefreshTokens.FirstOrDefault(urt => urt.UserId == user.Id);
+            var dbRefreshToken = await _dbContext.UserRefreshTokens.FirstOrDefaultAsync(urt => urt.UserId == user.Id);
             if (dbRefreshToken != null)
             {
                 dbRefreshToken.RefreshToken = refreshToken;
@@ -241,7 +241,7 @@ namespace PetCare.BusinessLogic.Services
                 };
                 _dbContext.UserRefreshTokens.Add(dbRefreshToken);
             }
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return refreshToken;
         }
@@ -257,7 +257,7 @@ namespace PetCare.BusinessLogic.Services
                     StatusCode = 404
                 };
             }
-            var dbRefreshToken = _dbContext.UserRefreshTokens.FirstOrDefault(urt => urt.UserId == user.Id);
+            var dbRefreshToken = await _dbContext.UserRefreshTokens.FirstOrDefaultAsync(urt => urt.UserId == user.Id);
             if (dbRefreshToken == null || dbRefreshToken.RefreshToken != refreshToken)
             {
                 throw new BaseException()
