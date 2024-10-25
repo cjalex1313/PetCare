@@ -109,9 +109,6 @@ var options = new DashboardOptions
 {
     Authorization = new[] { new HangfireCustomBasicAuthenticationFilter { User = appSettings.HangfireSettings.Username, Pass = appSettings.HangfireSettings.Password } }
 };
-
-
-
 app.UseHangfireDashboard("/hangfire", options);
 
 app.UseMiddleware<ExceptionMiddleware>();

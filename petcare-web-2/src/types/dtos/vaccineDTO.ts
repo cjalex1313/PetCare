@@ -3,6 +3,13 @@ export interface VaccineDTO {
   petId: string;
   name: string;
   administrationDate: Date;
-  nextDueDate?: Date;
+  notes?: string;
+}
+
+export interface UpcomingVaccineDTO {
+  id: string;
+  petId: string;
+  name: string;
+  date: Date;
   notes?: string;
 }

@@ -265,6 +265,33 @@ namespace PetCare.DataAccess.Migrations
                     b.UseTptMappingStrategy();
                 });
 
+            modelBuilder.Entity("PetCare.Shared.Entities.UpcomingVaccine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("PetId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PetId");
+
+                    b.ToTable("UpcomingVaccines", (string)null);
+                });
+
             modelBuilder.Entity("PetCare.Shared.Entities.Vaccine", b =>
                 {
                     b.Property<Guid>("Id")
@@ -279,9 +306,6 @@ namespace PetCare.DataAccess.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.Property<DateTime?>("NextDueDate")
-                        .HasColumnType("date");
-
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
@@ -289,8 +313,6 @@ namespace PetCare.DataAccess.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NextDueDate");
 
                     b.HasIndex("PetId");
 
@@ -371,6 +393,17 @@ namespace PetCare.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PetCare.Shared.Entities.UpcomingVaccine", b =>
+                {
+                    b.HasOne("PetCare.Shared.Entities.Pets.Pet", "Pet")
+                        .WithMany("UpcomingVaccines")
+                        .HasForeignKey("PetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pet");
+                });
+
             modelBuilder.Entity("PetCare.Shared.Entities.Vaccine", b =>
                 {
                     b.HasOne("PetCare.Shared.Entities.Pets.Pet", "Pet")
@@ -402,6 +435,8 @@ namespace PetCare.DataAccess.Migrations
 
             modelBuilder.Entity("PetCare.Shared.Entities.Pets.Pet", b =>
                 {
+                    b.Navigation("UpcomingVaccines");
+
                     b.Navigation("Vaccines");
                 });
 #pragma warning restore 612, 618

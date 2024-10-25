@@ -22,7 +22,6 @@ namespace PetCare.BusinessLogic.Services
         Vaccine GetVaccine(Guid id);
         IEnumerable<Vaccine> GetVaccinesForPet(Guid petId);
         Vaccine UpdateVaccine(VaccineDTO vaccineDTO);
-        void SendVaccineReminder();
     }
 
     internal class VaccinesService : IVaccinesService
@@ -64,39 +63,6 @@ namespace PetCare.BusinessLogic.Services
             return vaccines;
         }
 
-        public void SendVaccineReminder()
-        {
-            var vaccines = _dbContext.Vaccines.Include(v => v.Pet).Where(v => v.NextDueDate != null && v.NextDueDate > DateTime.UtcNow.Date && v.NextDueDate <= DateTime.UtcNow.AddDays(1).Date).ToList();
-            foreach (var vaccine in vaccines)
-            {
-                var pet = vaccine.Pet;
-                if (pet == null)
-                {
-                    continue;
-                }
-                var user = _dbContext.Users.FirstOrDefault(u => u.Id == pet.UserId);
-                if (user == null || user.Email == null || user.UserName == null)
-                {
-                    continue;
-                }
-                _emailService.SendEmail(new Email.Models.MailData
-                {
-                    Email = user.Email,
-                    Name = user.UserName,
-                    Subject = $"{pet.Name}'s Vaccine is Due Soon!",
-                    Body = $@"Hi {user.UserName},
-                    <br><br>
-                    Just a friendly reminder that {pet.Name}'s vaccine is due on {vaccine.NextDueDate:MMMM dd, yyyy}.
-                    <br><br>
-                    Don't forget to schedule an appointment with your vet!
-                    <br><br>
-                    Best,
-                    <br>
-                    PetCare"
-                }, MimeKit.Text.TextFormat.Html);
-            }
-        }
-
         public Vaccine UpdateVaccine(VaccineDTO vaccineDTO)
         {
             var vaccine = _dbContext.Vaccines.FirstOrDefault(v => v.Id ==  vaccineDTO.Id);
@@ -106,7 +72,6 @@ namespace PetCare.BusinessLogic.Services
             }
             vaccine.Name = vaccineDTO.Name;
             vaccine.Notes = vaccineDTO.Notes;
-            vaccine.NextDueDate = vaccineDTO.NextDueDate;
             vaccine.AdministrationDate = vaccineDTO.AdministrationDate;
             _dbContext.SaveChanges();
             return vaccine;
