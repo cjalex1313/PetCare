@@ -58,4 +58,11 @@ public static class EntityMappings
         entity.Property(e => e.Date).HasColumnType("date");
         entity.HasOne(e => e.Pet).WithMany(p => p.UpcomingVaccines).HasForeignKey(e => e.PetId).OnDelete(DeleteBehavior.Cascade);
     }
+
+    public static void MapFacebookUser(EntityTypeBuilder<FacebookUser> entity)
+    {
+        entity.ToTable("FacebookUsers");
+        entity.HasKey(e => e.Id);
+        entity.Property(e => e.FacebookId).HasMaxLength(128);
+    }
 }

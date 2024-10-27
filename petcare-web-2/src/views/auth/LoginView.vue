@@ -92,10 +92,16 @@ const facebookLogin = () => {
   FB.login(function(response: any) {
     console.log(response);
     if (response.authResponse) {
-      console.log('Welcome!  Fetching your information.... ');
-      FB.api('/me', function(response: any) {
-        console.log(response);
+      authApi.facebookLogin(response.authResponse.accessToken).then((data) => {
+        if (data.accessToken) {
+          userStore.setUserAccessToken(data.accessToken).then(() => {
+            router.push('/');
+          });
+        }
       });
+      // FB.api('/me', function(response: any) {
+      //   console.log(response);
+      // });
     } else {
       console.log('User cancelled login or did not fully authorize.');
     }
