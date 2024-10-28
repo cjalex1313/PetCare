@@ -351,26 +351,41 @@ namespace PetCare.BusinessLogic.Services
 
         public async Task<FacebookAuthResult> FacebookLogin(string accessToken)
         {
+            IdentityUser? user = null;
             var facebookUser = await ValidateFacebookAccessTokenAsync(accessToken);
             if (facebookUser == null)
             {
                 return new FacebookAuthResult { Succeeded = false, Error = "Invalid Facebook token" };
             }
 
-            if (string.IsNullOrWhiteSpace(facebookUser.Email))
+            var dbFacebookUser = await _dbContext.FacebookUsers.FirstOrDefaultAsync(u => u.FacebookId == facebookUser.Id);
+            if (dbFacebookUser != null)
             {
-                throw new BaseException("Facebook account does not have an email address");
+                user = await _userManager.FindByIdAsync(dbFacebookUser.Id);
             }
 
-            // 2. Check if user exists
-            var user = await _userManager.FindByEmailAsync(facebookUser.Email);
+            if (user == null && !string.IsNullOrWhiteSpace(facebookUser.Email))
+            {
+                user = await _userManager.FindByEmailAsync(facebookUser.Email);
+                if (user != null)
+                {
+                    _dbContext.FacebookUsers.Add(new FacebookUser()
+                    {
+                        Id = user.Id,
+                        FacebookId = facebookUser.Id
+                    });
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+
             if (user == null)
             {
+                var email = facebookUser.Email ?? $"fb-{facebookUser.Id}@fb.petcare.com";
                 // 3. Create new user if they don't exist
                 user = new IdentityUser()
                 {
-                    UserName = facebookUser.Email,
-                    Email = facebookUser.Email,
+                    UserName = email,
+                    Email = email,
                     EmailConfirmed = true // Facebook has already verified this email
                 };
                 var result = await _userManager.CreateAsync(user);
