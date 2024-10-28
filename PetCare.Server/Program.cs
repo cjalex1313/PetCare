@@ -25,6 +25,7 @@ if (appSettings == null)
     throw new BaseException("Config is corrupt");
 }
 builder.Services.AddCors();
+builder.Services.AddHttpClient();
 builder.Services.AddSingleton<AppSettings>(appSettings);
 builder.Services.AddBusinessLogic(builder.Configuration);
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<PetDbContext>().AddDefaultTokenProviders();
@@ -33,6 +34,15 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddFacebook(facebookOptions =>
+{
+    facebookOptions.AppId = appSettings.FacebookSettings.AppId;
+    facebookOptions.AppSecret =  appSettings.FacebookSettings.AppSecret;
+
+    // You can optionally request additional user information here
+    facebookOptions.Fields.Add("name");
+    facebookOptions.Fields.Add("email");
+    facebookOptions.Fields.Add("picture"); 
 }).AddJwtBearer(options =>
 {
     options.SaveToken = false;

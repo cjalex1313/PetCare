@@ -37,5 +37,12 @@ export function useAuthApi() {
     return response.data;
   };
 
-  return { login, register, confirmAccount, getProfile };
+  const facebookLogin = async (accessToken: string): Promise<LoginResult> => {
+    const response = await baseApi.post<LoginResult>('/Auth/facebook-login', {
+      accessToken
+    });
+    return response.data;
+  };
+
+  return { login, register, confirmAccount, getProfile, facebookLogin };
 }

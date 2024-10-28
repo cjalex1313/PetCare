@@ -11,6 +11,7 @@ namespace PetCare.Shared.Config
         public required JwtConfig JWTConfig { get; set; }
         public required AdminConfig AdminConfig { get; set; }
         public required HangfireSettings HangfireSettings { get; set; }
+        public required FacebookSettings FacebookSettings { get; set; }
         public required string EmailConfirmationUrl { get; set; }
     }
 }

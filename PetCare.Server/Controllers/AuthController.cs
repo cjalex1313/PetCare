@@ -11,6 +11,8 @@ using PetCare.Shared.Exceptions;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
+using PetCare.Shared.Config;
 
 namespace PetCare.Server.Controllers
 {
@@ -46,6 +48,24 @@ namespace PetCare.Server.Controllers
             return Ok(new BaseResponse()
             {
                 Succeeded = true
+            });
+        }
+        
+        [HttpPost("facebook-login")]
+        public async Task<IActionResult> FacebookLogin([FromBody] FacebookLoginRequest request)
+        {
+            var user = await _authService.FacebookLogin(request.AccessToken);
+            if (!user.Succeeded)
+            {
+                throw new BaseException(user.Error);
+            }
+            var token = await _authService.GetAccessToken(user.User);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            var refreshToken = await _authService.GenerateRefreshToken(user.User.UserName ?? throw new InvalidOperationException());
+            return Ok(new LoginResult()
+            {
+                AccessToken = tokenString,
+                RefreshToken = refreshToken
             });
         }
 

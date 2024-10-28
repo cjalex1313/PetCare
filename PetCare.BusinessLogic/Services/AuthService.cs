@@ -16,10 +16,12 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using PetCare.BusinessLogic.Facebook;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace PetCare.BusinessLogic.Services
@@ -35,6 +37,8 @@ namespace PetCare.BusinessLogic.Services
         Task<IList<IdentityUser>> GetUsers();
         Task ConfirmEmail(Guid userId, string token);
         Task RegisterUser(RegisterRequest registerRequest);
+        Task<FacebookAuthResult> FacebookLogin(string accessToken);
+        Task<JwtSecurityToken> GetAccessToken(IdentityUser user);
     }
     internal class AuthService : IAuthService
     {
@@ -44,14 +48,16 @@ namespace PetCare.BusinessLogic.Services
         private readonly IEmailService _emailService;
         private readonly AppSettings _appSettings;
         private readonly PetDbContext _dbContext;
+        private readonly HttpClient _httpClient;
 
-        public AuthService(UserManager<IdentityUser> userManager, IEmailService emailService, AppSettings appSettings, RoleManager<IdentityRole> roleManager, PetDbContext petDbContext)
+        public AuthService(UserManager<IdentityUser> userManager, IEmailService emailService, AppSettings appSettings, RoleManager<IdentityRole> roleManager, PetDbContext petDbContext, HttpClient httpClient)
         {
             _userManager = userManager;
             _emailService = emailService;
             _appSettings = appSettings;
             _roleManager = roleManager;
             _dbContext = petDbContext;
+            _httpClient = httpClient;
         }
 
         public async Task EnsureAdminExists()
@@ -134,6 +140,26 @@ namespace PetCare.BusinessLogic.Services
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
+            };
+            var userRoles = await _userManager.GetRolesAsync(user);
+            foreach (var role in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            if (user.Email != null)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Email, user.Email));
+            }
+            var token = GetToken(authClaims);
+            return token;
+        }
+        
+        public async Task<JwtSecurityToken> GetAccessToken(IdentityUser user)
+        {
+            var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -321,6 +347,83 @@ namespace PetCare.BusinessLogic.Services
             }
             var identityAdmin = await AddUser(username, email, password);
             await AddRoleToUser(identityAdmin, Roles.User);
+        }
+
+        public async Task<FacebookAuthResult> FacebookLogin(string accessToken)
+        {
+            IdentityUser? user = null;
+            var facebookUser = await ValidateFacebookAccessTokenAsync(accessToken);
+            if (facebookUser == null)
+            {
+                return new FacebookAuthResult { Succeeded = false, Error = "Invalid Facebook token" };
+            }
+
+            var dbFacebookUser = await _dbContext.FacebookUsers.FirstOrDefaultAsync(u => u.FacebookId == facebookUser.Id);
+            if (dbFacebookUser != null)
+            {
+                user = await _userManager.FindByIdAsync(dbFacebookUser.Id);
+            }
+
+            if (user == null && !string.IsNullOrWhiteSpace(facebookUser.Email))
+            {
+                user = await _userManager.FindByEmailAsync(facebookUser.Email);
+                if (user != null)
+                {
+                    _dbContext.FacebookUsers.Add(new FacebookUser()
+                    {
+                        Id = user.Id,
+                        FacebookId = facebookUser.Id
+                    });
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+
+            if (user == null)
+            {
+                var email = facebookUser.Email ?? $"fb-{facebookUser.Id}@fb.petcare.com";
+                // 3. Create new user if they don't exist
+                user = new IdentityUser()
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true // Facebook has already verified this email
+                };
+                var result = await _userManager.CreateAsync(user);
+                if (!result.Succeeded)
+                {
+                    return new FacebookAuthResult 
+                    { 
+                        Succeeded = false, 
+                        Error = "Failed to create user" 
+                    };
+                }
+
+                _dbContext.FacebookUsers.Add(new FacebookUser()
+                {
+                    Id = user.Id,
+                    FacebookId = facebookUser.Id
+                });
+                await _dbContext.SaveChangesAsync();
+            }
+
+
+            return new FacebookAuthResult 
+            { 
+                Succeeded = true,
+                User = user
+            };
+        }
+
+        private async Task<FacebookUserInfo?> ValidateFacebookAccessTokenAsync(string accessToken)
+        {
+            // Validate token with Facebook Graph API
+            var response = await _httpClient.GetAsync(
+                $"https://graph.facebook.com/v21.0/me?fields=id,email&access_token={accessToken}");
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            return await response.Content.ReadFromJsonAsync<FacebookUserInfo>();
         }
     }
 }
