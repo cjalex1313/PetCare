@@ -352,9 +352,14 @@ namespace PetCare.BusinessLogic.Services
         public async Task<FacebookAuthResult> FacebookLogin(string accessToken)
         {
             var facebookUser = await ValidateFacebookAccessTokenAsync(accessToken);
-            if (facebookUser == null || facebookUser.Email == null)
+            if (facebookUser == null)
             {
                 return new FacebookAuthResult { Succeeded = false, Error = "Invalid Facebook token" };
+            }
+
+            if (string.IsNullOrWhiteSpace(facebookUser.Email))
+            {
+                throw new BaseException("Facebook account does not have an email address");
             }
 
             // 2. Check if user exists
