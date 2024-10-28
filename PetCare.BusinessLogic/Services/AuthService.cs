@@ -37,8 +37,8 @@ namespace PetCare.BusinessLogic.Services
         Task<IList<IdentityUser>> GetUsers();
         Task ConfirmEmail(Guid userId, string token);
         Task RegisterUser(RegisterRequest registerRequest);
-        Task<FacebookAuthResult> FacebookLogin(string requestAccessToken);
-        Task<JwtSecurityToken> GetAccessToken(IdentityUser userUser);
+        Task<FacebookAuthResult> FacebookLogin(string accessToken);
+        Task<JwtSecurityToken> GetAccessToken(IdentityUser user);
     }
     internal class AuthService : IAuthService
     {

@@ -21,12 +21,10 @@ namespace PetCare.Server.Controllers
     public class AuthController : BaseController
     {
         private readonly IAuthService _authService;
-        private readonly AppSettings _appSettings;
 
-        public AuthController(IAuthService authService, AppSettings appSettings)
+        public AuthController(IAuthService authService)
         {
             this._authService = authService;
-            _appSettings = appSettings;
         }
 
         [HttpPost("Login")]
