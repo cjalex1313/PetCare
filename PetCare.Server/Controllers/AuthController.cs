@@ -12,6 +12,7 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Google.Apis.Auth;
 using PetCare.Shared.Config;
 
 namespace PetCare.Server.Controllers
@@ -21,10 +22,12 @@ namespace PetCare.Server.Controllers
     public class AuthController : BaseController
     {
         private readonly IAuthService _authService;
+        private readonly AppSettings _appSettings;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, AppSettings appSettings)
         {
             this._authService = authService;
+            _appSettings = appSettings;
         }
 
         [HttpPost("Login")]
@@ -55,9 +58,14 @@ namespace PetCare.Server.Controllers
         public async Task<IActionResult> FacebookLogin([FromBody] FacebookLoginRequest request)
         {
             var user = await _authService.FacebookLogin(request.AccessToken);
-            if (!user.Succeeded)
+            if (!user.Succeeded && user.Error != null)
             {
                 throw new BaseException(user.Error);
+            }
+
+            if (user.User == null)
+            {
+                throw new BaseException("Internal server error in facebook authentication");
             }
             var token = await _authService.GetAccessToken(user.User);
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
@@ -67,6 +75,21 @@ namespace PetCare.Server.Controllers
                 AccessToken = tokenString,
                 RefreshToken = refreshToken
             });
+        }
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+        {
+            if (string.IsNullOrEmpty(request.IdToken))
+                return BadRequest("ID token is required");
+            var token = await _authService.GoogleLogin(request.IdToken);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            LoginResult response = new LoginResult()
+            {
+                AccessToken = tokenString,
+                RefreshToken = ""
+            };
+            return Ok(response);
         }
 
         [HttpPost("Confirmation")]
@@ -125,5 +148,7 @@ namespace PetCare.Server.Controllers
                 RefreshToken = refreshRequest.RefreshToken
             });
         }
+        
+        
     }
 }
