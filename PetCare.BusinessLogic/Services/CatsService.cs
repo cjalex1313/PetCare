@@ -11,7 +11,7 @@ namespace PetCare.BusinessLogic.Services
 {
     public interface ICatsService
     {
-        CatDto AddCat(CatDto catDTO, string userId);
+        CatDto AddCat(CatDto catDto, string userId);
     }
 
     internal class CatsService : ICatsService
