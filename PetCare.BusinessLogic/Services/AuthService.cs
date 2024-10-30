@@ -200,21 +200,7 @@ namespace PetCare.BusinessLogic.Services
                     throw new BaseException("Google login failed");
                 }
             }
-            var authClaims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.UserName!),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
-            };
-            var userRoles = await _userManager.GetRolesAsync(user);
-            foreach (var role in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, role));
-            }
-            if (user.Email != null)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Email, user.Email));
-            }
-            var token = GetToken(authClaims);
+            var token = await GetAccessToken(user);
             return token;
         }
 
