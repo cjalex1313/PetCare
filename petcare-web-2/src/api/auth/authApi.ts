@@ -43,6 +43,12 @@ export function useAuthApi() {
     });
     return response.data;
   };
+  const googleLogin = async (idToken: string): Promise<LoginResult> => {
+    const response = await baseApi.post<LoginResult>('/Auth/google-login',  {
+      idToken
+    });
+    return response.data;
+  }
 
-  return { login, register, confirmAccount, getProfile, facebookLogin };
+  return { login, register, confirmAccount, getProfile, facebookLogin, googleLogin };
 }

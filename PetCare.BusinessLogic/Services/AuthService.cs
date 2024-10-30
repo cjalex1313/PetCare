@@ -20,9 +20,8 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using Google.Apis.Auth;
 using PetCare.BusinessLogic.Facebook;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace PetCare.BusinessLogic.Services
 {
@@ -39,6 +38,7 @@ namespace PetCare.BusinessLogic.Services
         Task RegisterUser(RegisterRequest registerRequest);
         Task<FacebookAuthResult> FacebookLogin(string accessToken);
         Task<JwtSecurityToken> GetAccessToken(IdentityUser user);
+        Task<JwtSecurityToken> GoogleLogin(string idToken);
     }
     internal class AuthService : IAuthService
     {
@@ -157,9 +157,10 @@ namespace PetCare.BusinessLogic.Services
         
         public async Task<JwtSecurityToken> GetAccessToken(IdentityUser user)
         {
+            
             var authClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Name, user.UserName!),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -172,6 +173,34 @@ namespace PetCare.BusinessLogic.Services
                 authClaims.Add(new Claim(ClaimTypes.Email, user.Email));
             }
             var token = GetToken(authClaims);
+            return token;
+        }
+
+        public async Task<JwtSecurityToken> GoogleLogin(string idToken)
+        {
+            var payload = await VerifyGoogleToken(idToken);
+            if (payload == null)
+            {
+                throw new BaseException("Google login failed");
+            }
+
+            var user = await _userManager.FindByEmailAsync(payload.Email);
+            
+            if (user == null)
+            {
+                user = new IdentityUser()
+                {
+                    UserName = payload.Email,
+                    Email = payload.Email,
+                    EmailConfirmed = true // Facebook has already verified this email
+                };
+                var result = await _userManager.CreateAsync(user);
+                if (!result.Succeeded)
+                {
+                    throw new BaseException("Google login failed");
+                }
+            }
+            var token = await GetAccessToken(user);
             return token;
         }
 
@@ -424,6 +453,17 @@ namespace PetCare.BusinessLogic.Services
                 return null;
 
             return await response.Content.ReadFromJsonAsync<FacebookUserInfo>();
+        }
+        
+        private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(string idToken)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = new List<string> { _appSettings.GoogleSettings.ClientId } // Replace with your client ID from the Google Console
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+            return payload;
         }
     }
 }

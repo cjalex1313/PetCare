@@ -17,6 +17,7 @@
     </FloatLabel>
     <Button class="mb-4" @click="tryLogin" label="Login" />
     <Button class="mb-4" label="Facebook login" @click="facebookLogin" />
+    <GoogleLogin :callback="googleCallback"/>
     <div>
       Don't have an accout?
       <RouterLink
@@ -86,6 +87,16 @@ const loadFacebookSDK = () => {
       });
     };
   };
+};
+
+const googleCallback = async (response: any) => {
+  console.log(response);
+  const idToken = response.credential;
+  const r = await authApi.googleLogin(idToken);
+  if (r.accessToken) {
+    await userStore.setUserAccessToken(r.accessToken);
+  }
+  await router.push('/');
 };
 
 const facebookLogin = () => {
