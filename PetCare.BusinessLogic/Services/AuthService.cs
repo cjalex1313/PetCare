@@ -39,6 +39,8 @@ namespace PetCare.BusinessLogic.Services
         Task<FacebookAuthResult> FacebookLogin(string accessToken);
         Task<JwtSecurityToken> GetAccessToken(IdentityUser user);
         Task<JwtSecurityToken> GoogleLogin(string idToken);
+        Task SendForgotPasswordEmail(string email);
+        Task ResetPasswordAsync(Guid userId, string token, string newPassword);
     }
     internal class AuthService : IAuthService
     {
@@ -202,6 +204,46 @@ namespace PetCare.BusinessLogic.Services
             }
             var token = await GetAccessToken(user);
             return token;
+        }
+
+        public async Task SendForgotPasswordEmail(string email)
+        {
+            // Step 1: Check if the user exists
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null || string.IsNullOrWhiteSpace(user.Email))
+            {
+                // Optionally, for security, you might want to not disclose if the email exists
+                throw new EmailNotFoundException(email);
+            }
+
+            // Step 2: Generate a reset token
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // Step 3: Construct the reset URL
+            var resetUrl = $"{_appSettings.ForgotPasswordUrl}?userId={Uri.EscapeDataString(user.Id)}&token={Uri.EscapeDataString(token)}";
+
+            // Step 4: Send the email
+            _emailService.SendEmail(new Email.Models.MailData
+            {
+                Email = email,
+                Name = user.UserName ?? email,
+                Subject = "Password Reset",
+                Body = $"Please reset your password by clicking this link:  <a href=\"{resetUrl}\">reset</a>"
+            }, MimeKit.Text.TextFormat.Html);
+        }
+
+        public async Task ResetPasswordAsync(Guid userId, string token, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                throw new UserIdNotFoundException(userId);
+            }
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new BaseException($"Error while resetting password - {result.Errors.FirstOrDefault()?.Description}");
+            }
         }
 
         private async Task AddRoleToUser(IdentityUser identityUser, string role)

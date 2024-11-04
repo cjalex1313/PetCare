@@ -146,6 +146,18 @@ namespace PetCare.Server.Controllers
             });
         }
         
-        
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            await _authService.ResetPasswordAsync(request.UserId, request.Token, request.NewPassword);
+            return Ok();
+        }
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            await _authService.SendForgotPasswordEmail(request.Email);
+            return Ok();
+        }
     }
 }
