@@ -50,6 +50,11 @@ const router = createRouter({
       path: '/confirm-email',
       name: 'confirm-email',
       component: () => import('@/views/auth/ConfirmEmail.vue')
+    },
+    {
+      path: '/set-forgot-password',
+      name: 'set-forgot-password',
+      component: () => import('@/views/auth/SetForgotPasswordView.vue')
     }
   ]
 });

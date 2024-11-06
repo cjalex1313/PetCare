@@ -31,8 +31,6 @@ export const useUserStore = defineStore('user', () => {
       const profileObj = await authApi.getProfile();
       profile.email = profileObj.email;
       profile.username = profileObj.username;
-    } else {
-      router.push('/login');
     }
   }
 

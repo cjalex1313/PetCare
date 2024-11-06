@@ -41,6 +41,7 @@ namespace PetCare.BusinessLogic.Services
         Task<JwtSecurityToken> GoogleLogin(string idToken);
         Task SendForgotPasswordEmail(string email);
         Task ResetPasswordAsync(Guid userId, string token, string newPassword);
+        Task ChangePassword(string userId, string currentPassword, string newPassword);
     }
     internal class AuthService : IAuthService
     {
@@ -243,6 +244,20 @@ namespace PetCare.BusinessLogic.Services
             if (!result.Succeeded)
             {
                 throw new BaseException($"Error while resetting password - {result.Errors.FirstOrDefault()?.Description}");
+            }
+        }
+
+        public async Task ChangePassword(string userId, string currentPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new UserIdNotFoundException(Guid.Parse(userId));
+            }
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new BaseException($"Error while changing password - {result.Errors.FirstOrDefault()?.Description}");
             }
         }
 

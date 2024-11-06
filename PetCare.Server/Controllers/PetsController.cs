@@ -5,7 +5,6 @@ using PetCare.Shared.DTOs;
 using PetCare.Shared.DTOs.Pets;
 using PetCare.Shared.Entities.Pets;
 using PetCare.Shared.Exceptions.Pets;
-using System.Diagnostics;
 
 namespace PetCare.Server.Controllers;
 
