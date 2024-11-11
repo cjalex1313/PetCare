@@ -14,5 +14,6 @@ namespace PetCare.Shared.Config
         public required FacebookSettings FacebookSettings { get; set; }
         public required GoogleSettings GoogleSettings { get; set; }
         public required string EmailConfirmationUrl { get; set; }
+        public required string ForgotPasswordUrl { get; set; }
     }
 }

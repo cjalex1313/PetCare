@@ -17,8 +17,8 @@
     </FloatLabel>
     <Button class="mb-4" @click="tryLogin" label="Login" />
     <Button class="mb-4" label="Facebook login" @click="facebookLogin" />
-    <GoogleLogin :callback="googleCallback"/>
-    <div>
+    <GoogleLogin :callback="googleCallback" />
+    <div class="mb-4">
       Don't have an accout?
       <RouterLink
         class="font-medium text-green-600 dark:text-green-500 hover:underline"
@@ -26,10 +26,12 @@
         >Sign up
       </RouterLink>
     </div>
+    <Button class="mb-4" label="Forgot password" @click="goToForgotPassword" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { GoogleLogin } from 'vue3-google-login';
 declare const window: any;
 declare const FB: any;
 import { onBeforeMount, reactive } from 'vue';
@@ -49,6 +51,11 @@ const loginData = reactive({
   username: '',
   password: ''
 });
+
+const goToForgotPassword = () => {
+  console.log(1)
+  router.push('/forgot-password');
+};
 
 const tryLogin = async () => {
   const response = await authApi.login(loginData.username, loginData.password);
@@ -79,7 +86,7 @@ const loadFacebookSDK = () => {
 
   // Initialize the SDK once it's loaded
   script.onload = () => {
-    window.fbAsyncInit = function() {
+    window.fbAsyncInit = function () {
       FB.init({
         appId: import.meta.env.VITE_FB_APP_ID, // Replace with your actual App ID
         xfbml: true,
@@ -100,7 +107,7 @@ const googleCallback = async (response: any) => {
 };
 
 const facebookLogin = () => {
-  FB.login(function(response: any) {
+  FB.login(function (response: any) {
     console.log(response);
     if (response.authResponse) {
       authApi.facebookLogin(response.authResponse.accessToken).then((data) => {
@@ -117,7 +124,7 @@ const facebookLogin = () => {
       console.log('User cancelled login or did not fully authorize.');
     }
   });
-}
+};
 
 onBeforeMount(async () => {
   loadFacebookSDK();

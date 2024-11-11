@@ -5,7 +5,6 @@ import type { Profile } from '@/types/profile';
 import { useAuthApi } from '@/api/auth/authApi';
 
 export const useUserStore = defineStore('user', () => {
-  const router = useRouter();
   const authApi = useAuthApi();
 
   const userJwt = ref<string>('');
@@ -31,8 +30,6 @@ export const useUserStore = defineStore('user', () => {
       const profileObj = await authApi.getProfile();
       profile.email = profileObj.email;
       profile.username = profileObj.username;
-    } else {
-      router.push('/login');
     }
   }
 

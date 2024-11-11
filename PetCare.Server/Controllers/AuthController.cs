@@ -1,18 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using PetCare.BusinessLogic.Services;
 using PetCare.Shared.Common;
 using PetCare.Shared.DTOs;
 using PetCare.Shared.DTOs.Auth;
-using PetCare.Shared.Entities.Auth;
 using PetCare.Shared.Exceptions;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
-using Google.Apis.Auth;
 
 namespace PetCare.Server.Controllers
 {
@@ -55,7 +50,7 @@ namespace PetCare.Server.Controllers
         public async Task<IActionResult> FacebookLogin([FromBody] FacebookLoginRequest request)
         {
             var user = await _authService.FacebookLogin(request.AccessToken);
-            if (!user.Succeeded && user.Error != null)
+            if (user is { Succeeded: false, Error: not null })
             {
                 throw new BaseException(user.Error);
             }
@@ -101,7 +96,7 @@ namespace PetCare.Server.Controllers
         [Authorize]
         public ActionResult<UserProfile> GetUserProfile()
         {
-            if (User == null || User.Identity == null || !User.Identity.IsAuthenticated)
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
                 return Unauthorized();
             }
@@ -123,13 +118,10 @@ namespace PetCare.Server.Controllers
         public async Task<ActionResult<GetUsersResponse>> GetUsers()
         {
             var users = await _authService.GetUsers();
-            var userDTOs = users.Select(u =>
+            var userDTOs = users.Select(u => new UserDto
             {
-                return new UserDto
-                {
-                    Id = u.Id,
-                    Username = u.UserName ?? ""
-                };
+                Id = u.Id,
+                Username = u.UserName ?? ""
             }).ToList();
             return Ok(new GetUsersResponse(userDTOs));
         }
@@ -146,6 +138,27 @@ namespace PetCare.Server.Controllers
             });
         }
         
-        
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            await _authService.ResetPasswordAsync(request.UserId, request.Token, request.NewPassword);
+            return Ok();
+        }
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            await _authService.SendForgotPasswordEmail(request.Email);
+            return Ok();
+        }
+
+        [HttpPost("ChangePassword")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            var userId = GetUserId();
+            await _authService.ChangePassword(userId, request.CurrentPassword, request.NewPassword);
+            return Ok();
+        }
     }
 }

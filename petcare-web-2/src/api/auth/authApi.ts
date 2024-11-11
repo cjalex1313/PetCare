@@ -32,6 +32,20 @@ export function useAuthApi() {
     });
     return response.data;
   };
+
+  const resetPasswrod = async (userId: string, token: string, password: string): Promise<void> => {
+    await baseApi.post('/Auth/ResetPassword', {
+      userId,
+      token,
+      newPassword: password
+    });
+  };
+
+  const forgotPasswordRequest = async (email: string): Promise<void> => {
+    await baseApi.post('/Auth/ForgotPassword', {
+      email
+    });
+  };
   const getProfile = async (): Promise<Profile> => {
     const response = await baseApi.get<Profile>('/Auth/Profile');
     return response.data;
@@ -50,5 +64,5 @@ export function useAuthApi() {
     return response.data;
   }
 
-  return { login, register, confirmAccount, getProfile, facebookLogin, googleLogin };
+  return { login, register, confirmAccount, getProfile, facebookLogin, googleLogin, forgotPasswordRequest, resetPasswrod };
 }

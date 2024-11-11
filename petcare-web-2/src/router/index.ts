@@ -37,6 +37,11 @@ const router = createRouter({
       component: () => import('../views/auth/LoginView.vue')
     },
     {
+      path: '/forgot-password',
+      name: 'forgot password',
+      component: () => import('../views/auth/ForgotPassword.vue')
+    },
+    {
       path: '/register',
       name: 'register',
       component: () => import('../views/auth/RegisterView.vue')
@@ -45,6 +50,11 @@ const router = createRouter({
       path: '/confirm-email',
       name: 'confirm-email',
       component: () => import('@/views/auth/ConfirmEmail.vue')
+    },
+    {
+      path: '/set-forgot-password',
+      name: 'set-forgot-password',
+      component: () => import('@/views/auth/SetForgotPasswordView.vue')
     }
   ]
 });
