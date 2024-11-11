@@ -12,6 +12,7 @@ namespace PetCare.DataAccess
     {
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
         public DbSet<FacebookUser> FacebookUsers { get; set; }
+        public DbSet<GoogleUser> GoogleUsers { get; set; }
         public DbSet<Pet> Pets { get; set; }
         public DbSet<Cat> Cats { get; set; }
         public DbSet<Dog> Dogs { get; set; }
@@ -30,6 +31,7 @@ namespace PetCare.DataAccess
             EntityMappings.MapVaccines(builder.Entity<Vaccine>());
             EntityMappings.MapUpcomingVaccines(builder.Entity<UpcomingVaccine>());
             EntityMappings.MapFacebookUser(builder.Entity<FacebookUser>());
+            EntityMappings.MapGoogleUser(builder.Entity<GoogleUser>());
         }
     }
 }

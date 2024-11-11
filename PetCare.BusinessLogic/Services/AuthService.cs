@@ -186,9 +186,17 @@ namespace PetCare.BusinessLogic.Services
             {
                 throw new BaseException("Google login failed");
             }
-
-            var user = await _userManager.FindByEmailAsync(payload.Email);
             
+            IdentityUser? user = null;
+            var dbGoogleUser = await _dbContext.GoogleUsers.FirstOrDefaultAsync(g => g.GoogleEmail == payload.Email);
+            if (dbGoogleUser != null)
+            {
+                user = await _userManager.FindByIdAsync(dbGoogleUser.Id);
+            }
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(payload.Email);
+            }
             if (user == null)
             {
                 user = new IdentityUser()
@@ -202,6 +210,15 @@ namespace PetCare.BusinessLogic.Services
                 {
                     throw new BaseException("Google login failed");
                 }
+            }
+            if (dbGoogleUser == null)
+            {
+                _dbContext.GoogleUsers.Add(new GoogleUser()
+                {
+                    Id = user.Id,
+                    GoogleEmail = user.Email
+                });
+                await _dbContext.SaveChangesAsync();
             }
             var token = await GetAccessToken(user);
             return token;

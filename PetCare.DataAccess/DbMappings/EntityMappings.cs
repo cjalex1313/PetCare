@@ -64,5 +64,14 @@ public static class EntityMappings
         entity.ToTable("FacebookUsers");
         entity.HasKey(e => e.Id);
         entity.Property(e => e.FacebookId).HasMaxLength(128);
+        entity.HasIndex(e => e.FacebookId).IsUnique();
+    }
+
+    public static void MapGoogleUser(EntityTypeBuilder<GoogleUser> entity)
+    {
+        entity.ToTable("GoogleUsers");
+        entity.HasKey(e => e.Id);
+        entity.Property(e => e.GoogleEmail).HasMaxLength(256);
+        entity.HasIndex(e => e.GoogleEmail).IsUnique();
     }
 }
