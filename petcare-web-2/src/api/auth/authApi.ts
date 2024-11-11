@@ -6,9 +6,9 @@ import type { Profile } from '../../types/profile';
 export function useAuthApi() {
   const { baseApi } = useBaseApi();
 
-  const login = async (username: string, password: string): Promise<LoginResult> => {
+  const login = async (email: string, password: string): Promise<LoginResult> => {
     const response = await baseApi.post<LoginResult>('/Auth/Login', {
-      username,
+      email,
       password
     });
     return response.data;

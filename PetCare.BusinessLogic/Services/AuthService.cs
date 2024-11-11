@@ -29,8 +29,8 @@ namespace PetCare.BusinessLogic.Services
     {
         Task EnsureAdminExists();
         Task EnsureRolesExistInDb();
-        Task<JwtSecurityToken> Login(string username, string password);
-        Task<string> GenerateRefreshToken(string username);
+        Task<JwtSecurityToken> Login(string email, string password);
+        Task<string> GenerateRefreshToken(string email);
         string GetUsernameFromExpiredToken(string token);
         Task<string> RefreshAccessToken(string username, string refreshToken);
         Task<IList<IdentityUser>> GetUsers();
@@ -127,12 +127,12 @@ namespace PetCare.BusinessLogic.Services
             return token;
         }
 
-        public async Task<JwtSecurityToken> Login(string username, string password)
+        public async Task<JwtSecurityToken> Login(string email, string password)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                throw new LoginUserNotFoundException(username);
+                throw new LoginUserNotFoundException(email);
             }
             var loginAttempt = await _userManager.CheckPasswordAsync(user, password);
             if (!loginAttempt)
@@ -142,7 +142,6 @@ namespace PetCare.BusinessLogic.Services
 
             var authClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, username),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -338,7 +337,7 @@ namespace PetCare.BusinessLogic.Services
             return identityUser;
         }
 
-        public async Task<string> GenerateRefreshToken(string username)
+        public async Task<string> GenerateRefreshToken(string email)
         {
             var randomNumber = new byte[32];
             string refreshToken = "";
@@ -347,7 +346,7 @@ namespace PetCare.BusinessLogic.Services
                 rng.GetBytes(randomNumber);
                 refreshToken = Convert.ToBase64String(randomNumber);
             }
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
             {

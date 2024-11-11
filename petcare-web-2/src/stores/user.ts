@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import type { Profile } from '@/types/profile';
 import { useAuthApi } from '@/api/auth/authApi';
 
@@ -9,7 +8,6 @@ export const useUserStore = defineStore('user', () => {
 
   const userJwt = ref<string>('');
   const profile = reactive<Profile>({
-    username: '',
     email: ''
   });
 
@@ -19,7 +17,6 @@ export const useUserStore = defineStore('user', () => {
       localStorage.setItem('JWT', accessToken);
       const profileObj = await authApi.getProfile();
       profile.email = profileObj.email;
-      profile.username = profileObj.username;
     }
   }
 
@@ -29,7 +26,6 @@ export const useUserStore = defineStore('user', () => {
       userJwt.value = jwt;
       const profileObj = await authApi.getProfile();
       profile.email = profileObj.email;
-      profile.username = profileObj.username;
     }
   }
 
