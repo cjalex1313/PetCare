@@ -20,10 +20,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';
-import Password from 'primevue/password';
 import Button from 'primevue/button';
 import { useAuthApi } from '@/api/auth/authApi';
 

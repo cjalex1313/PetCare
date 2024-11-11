@@ -5,7 +5,6 @@ import type { Profile } from '@/types/profile';
 import { useAuthApi } from '@/api/auth/authApi';
 
 export const useUserStore = defineStore('user', () => {
-  const router = useRouter();
   const authApi = useAuthApi();
 
   const userJwt = ref<string>('');
