@@ -1,7 +1,7 @@
 namespace PetCare.Shared.DTOs.Auth;
 
-public class UserNamesDTO
+public class UserNamesDto
 {
-    public string FirstName { get; set; }
+    public required string FirstName { get; set; }
     public string? LastName { get; set; }
 }

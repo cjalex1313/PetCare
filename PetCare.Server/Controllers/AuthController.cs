@@ -95,7 +95,7 @@ namespace PetCare.Server.Controllers
 
         [HttpGet("Profile")]
         [Authorize]
-        public async Task<ActionResult<UserProfileDTO>> GetUserProfile()
+        public async Task<ActionResult<UserProfileDto>> GetUserProfile()
         {
             if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
@@ -105,7 +105,7 @@ namespace PetCare.Server.Controllers
             if (email == null) {
                 throw new BaseException("Token does not contain username and email claims");
             }
-            var response = new UserProfileDTO()
+            var response = new UserProfileDto()
             {
                 Email = email,
             };
@@ -120,7 +120,7 @@ namespace PetCare.Server.Controllers
 
         [HttpPut("SetUserNames")]
         [Authorize]
-        public async Task<ActionResult> SetUserNames([FromBody] UserNamesDTO userNames)
+        public async Task<ActionResult> SetUserNames([FromBody] UserNamesDto userNames)
         {
             if (User.Identity == null || !User.Identity.IsAuthenticated)
             {

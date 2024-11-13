@@ -43,7 +43,7 @@ namespace PetCare.BusinessLogic.Services
         Task ResetPasswordAsync(Guid userId, string token, string newPassword);
         Task ChangePassword(string userId, string currentPassword, string newPassword);
         Task<UserProfile?> GetUserProfile(ClaimsPrincipal user);
-        Task SetUserNames(ClaimsPrincipal user, UserNamesDTO userNames);
+        Task SetUserNames(ClaimsPrincipal user, UserNamesDto userNames);
     }
     internal class AuthService : IAuthService
     {
@@ -286,7 +286,7 @@ namespace PetCare.BusinessLogic.Services
             return userProfile;
         }
 
-        public async Task SetUserNames(ClaimsPrincipal user, UserNamesDTO userNames)
+        public async Task SetUserNames(ClaimsPrincipal user, UserNamesDto userNames)
         {
             var dbUser = await _userManager.GetUserAsync(user);
             var userProfile = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.UserId == dbUser!.Id);
