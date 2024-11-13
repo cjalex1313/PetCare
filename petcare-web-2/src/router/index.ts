@@ -27,6 +27,12 @@ const router = createRouter({
       component: () => import('../views/pets/PetView.vue')
     },
     {
+      path: '/meet',
+      name: 'meet',
+      beforeEnter: [authGuard],
+      component: () => import('../views/MeetView.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('../views/auth/LoginView.vue')

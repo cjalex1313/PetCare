@@ -42,6 +42,8 @@ namespace PetCare.BusinessLogic.Services
         Task SendForgotPasswordEmail(string email);
         Task ResetPasswordAsync(Guid userId, string token, string newPassword);
         Task ChangePassword(string userId, string currentPassword, string newPassword);
+        Task<UserProfile?> GetUserProfile(ClaimsPrincipal user);
+        Task SetUserNames(ClaimsPrincipal user, UserNamesDTO userNames);
     }
     internal class AuthService : IAuthService
     {
@@ -275,6 +277,36 @@ namespace PetCare.BusinessLogic.Services
             {
                 throw new BaseException($"Error while changing password - {result.Errors.FirstOrDefault()?.Description}");
             }
+        }
+
+        public async Task<UserProfile?> GetUserProfile(ClaimsPrincipal user)
+        {
+            var dbUser = await _userManager.GetUserAsync(user);
+            var userProfile = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.UserId == dbUser!.Id);
+            return userProfile;
+        }
+
+        public async Task SetUserNames(ClaimsPrincipal user, UserNamesDTO userNames)
+        {
+            var dbUser = await _userManager.GetUserAsync(user);
+            var userProfile = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.UserId == dbUser!.Id);
+            if (userProfile == null)
+            {
+                userProfile = new UserProfile()
+                {
+                    UserId = dbUser!.Id,
+                    FirstName = userNames.FirstName,
+                    LastName = userNames.LastName,
+                };
+                _dbContext.UserProfiles.Add(userProfile);
+            }
+            else
+            {
+                userProfile.FirstName = userNames.FirstName;
+                userProfile.LastName = userNames.LastName;
+            }
+
+            await _dbContext.SaveChangesAsync();
         }
 
         private async Task AddRoleToUser(IdentityUser identityUser, string role)

@@ -8,6 +8,7 @@ using PetCare.Shared.DTOs.Auth;
 using PetCare.Shared.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using PetCare.Shared.Entities.Auth;
 
 namespace PetCare.Server.Controllers
 {
@@ -94,7 +95,7 @@ namespace PetCare.Server.Controllers
 
         [HttpGet("Profile")]
         [Authorize]
-        public ActionResult<UserProfile> GetUserProfile()
+        public async Task<ActionResult<UserProfileDTO>> GetUserProfile()
         {
             if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
@@ -104,11 +105,29 @@ namespace PetCare.Server.Controllers
             if (email == null) {
                 throw new BaseException("Token does not contain username and email claims");
             }
-            var response = new UserProfile()
+            var response = new UserProfileDTO()
             {
                 Email = email,
             };
+            UserProfile? userProfile = await _authService.GetUserProfile(User);
+            if (userProfile != null)
+            {
+                response.FirstName = userProfile.FirstName;
+                response.LastName = userProfile.LastName;
+            }
             return Ok(response);
+        }
+
+        [HttpPut("SetUserNames")]
+        [Authorize]
+        public async Task<ActionResult> SetUserNames([FromBody] UserNamesDTO userNames)
+        {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return Unauthorized();
+            }
+            await _authService.SetUserNames(User, userNames);
+            return Ok();
         }
 
         [HttpGet("Users")]

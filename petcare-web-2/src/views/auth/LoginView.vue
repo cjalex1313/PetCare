@@ -105,7 +105,6 @@ const tryLogin = async () => {
   if (response.accessToken) {
     await userStore.setUserAccessToken(response.accessToken);
   }
-  router.push('/');
 };
 
 if (localStorage.getItem('JWT')) {

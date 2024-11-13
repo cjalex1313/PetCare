@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PetCare.Shared.DTOs.Auth;
-public class UserProfile
+public class UserProfileDTO
 {
     public required string Email { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
 }
