@@ -16,20 +16,15 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: AuthLayout,
+      name: 'home',
       beforeEnter: [authGuard],
-      children: [
-        {
-          path: '/',
-          name: 'home',
-          component: HomeView
-        },
-        {
-          path: '/pet/:id',
-          name: 'pet',
-          component: () => import('../views/pets/PetView.vue')
-        }
-      ]
+      component: HomeView
+    },
+    {
+      path: '/pet/:id',
+      name: 'pet',
+      beforeEnter: [authGuard],
+      component: () => import('../views/pets/PetView.vue')
     },
     {
       path: '/login',

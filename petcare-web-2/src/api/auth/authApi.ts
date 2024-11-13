@@ -14,12 +14,10 @@ export function useAuthApi() {
     return response.data;
   };
   const register = async (
-    username: string,
     password: string,
     email: string
   ): Promise<BaseResponse> => {
     const response = await baseApi.post<BaseResponse>('/Auth/Register', {
-      username,
       password,
       email
     });

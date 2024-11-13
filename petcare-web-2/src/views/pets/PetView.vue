@@ -1,35 +1,40 @@
 <template>
   <div>
-    <div v-if="pet">
-      <div class="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-        <div class="flex items-center">
-          <PetIcon :pet-type="pet.petType" class="w-8 h-8 mr-4" />
-          <h3 class="text-xl font-semibold leading-6 text-gray-900">
-            {{ pet.name }}
-          </h3>
-        </div>
-        <div class="mt-3 sm:ml-4 sm:mt-0">
-          <div>
-            <Button @click="tryDeletePet" severity="danger" class="mr-3">Delete</Button>
+    <NavBar />
+    <div class="p-5">
+      <div>
+        <div v-if="pet">
+          <div class="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
+            <div class="flex items-center">
+              <PetIcon :pet-type="pet.petType" class="w-8 h-8 mr-4" />
+              <h3 class="text-xl font-semibold leading-6 text-gray-900">
+                {{ pet.name }}
+              </h3>
+            </div>
+            <div class="mt-3 sm:ml-4 sm:mt-0">
+              <div>
+                <Button @click="tryDeletePet" severity="danger" class="mr-3">Delete</Button>
+              </div>
+            </div>
           </div>
+          <Tabs lazy value="0">
+            <TabList>
+              <Tab value="0">Profile</Tab>
+              <Tab value="1">Vaccines</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel value="0">
+                <PetDetails @petUpdated="handlePetUpdate" :petId="pet.id" />
+              </TabPanel>
+              <TabPanel value="1">
+                <VaccinesDetails :pet-id="pet.id" />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </div>
+        <div v-else></div>
       </div>
-      <Tabs lazy value="0">
-        <TabList>
-          <Tab value="0">Profile</Tab>
-          <Tab value="1">Vaccines</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel value="0">
-            <PetDetails @petUpdated="handlePetUpdate" :petId="pet.id" />
-          </TabPanel>
-          <TabPanel value="1">
-            <VaccinesDetails :pet-id="pet.id" />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
     </div>
-    <div v-else></div>
   </div>
 </template>
 
@@ -48,6 +53,7 @@ import PetIcon from '@/components/pets/PetIcon.vue';
 import PetDetails from '@/components/pets/PetDetails.vue';
 import VaccinesDetails from '@/components/vaccines/VaccinesDetails.vue';
 import type { PetDTO } from '@/types/dtos/petDTO';
+import NavBar from "@/components/layout/NavBar.vue";
 
 const route = useRoute();
 const router = useRouter();

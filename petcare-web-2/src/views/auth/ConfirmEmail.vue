@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col justify-center items-center">
+  <div class="h-screen flex flex-col justify-center items-center" :class="{'mobile-background': isMobile}">
     <div v-if="showError">Something went wrong. Please contact us</div>
     <div v-if="loading">Loading...</div>
     <div v-if="!loading && !showError">
@@ -15,7 +15,9 @@
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthApi } from '@/api/auth/authApi';
+import { useDeviceType } from "@/composables/useDeviceType";
 
+const { isMobile } = useDeviceType();
 const route = useRoute();
 const authApi = useAuthApi();
 const loading = ref(true);
@@ -38,3 +40,12 @@ const activateAccount = async () => {
 
 activateAccount();
 </script>
+
+<style scoped>
+.mobile-background {
+  background-image: url('../../assets/images/auth_background.png');
+  background-size: cover; /* Adjust as needed */
+  background-position: center; /* Adjust as needed */
+  background-repeat: no-repeat; /* Adjust as needed */
+}
+</style>

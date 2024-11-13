@@ -435,20 +435,14 @@ namespace PetCare.BusinessLogic.Services
         public async Task RegisterUser(RegisterRequest registerRequest)
         {
             var email = registerRequest.Email;
-            var username = registerRequest.Username;
             var password = registerRequest.Password;
-            var user = await _userManager.FindByNameAsync(username);
-            if (user != null)
-            {
-                throw new UsernameAlreadyExistsException(username);
-            }
-            user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
                 throw new EmailAlreadyExistsException(email);
             }
-            var identityAdmin = await AddUser(username, email, password);
-            await AddRoleToUser(identityAdmin, Roles.User);
+            var identityUser = await AddUser(email, email, password);
+            await AddRoleToUser(identityUser, Roles.User);
         }
 
         public async Task<FacebookAuthResult> FacebookLogin(string accessToken)
