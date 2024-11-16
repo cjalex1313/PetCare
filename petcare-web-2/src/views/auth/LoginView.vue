@@ -1,8 +1,8 @@
 <template>
-  <div class="h-screen flex items-center justify-center flex-col">
+  <div v-if="!isMobile" class="h-screen flex items-center justify-center flex-col">
     <FloatLabel class="mb-6">
-      <InputText class="w-64" id="username" v-model="loginData.username" />
-      <label for="username">Username</label>
+      <InputText class="w-64" id="email" v-model="loginData.email" />
+      <label for="email">Email</label>
     </FloatLabel>
     <FloatLabel class="mb-6">
       <Password
@@ -28,13 +28,50 @@
     </div>
     <Button class="mb-4" label="Forgot password" @click="goToForgotPassword" />
   </div>
+  <div v-else class="mobile-background">
+    <div v-if="mobileSocial" class="min-h-screen flex items-center justify-center flex-col">
+      <GoogleLogin class="mb-4" :callback="googleCallback" />
+      <Button
+        icon="pi pi-facebook"
+        severity="contrast"
+        label="Continue with Facebook"
+        @click="facebookLogin"
+        class="!px-6 mb-8"
+      />
+      <div @click="mobileSocial = false" class="text-primary hover:underline">
+        or continue with email
+      </div>
+    </div>
+    <div v-else class="min-h-screen flex items-center justify-center flex-col">
+      <FloatLabel class="mb-6">
+        <InputText class="w-64" id="email" v-model="loginData.email" />
+        <label for="email">Email</label>
+      </FloatLabel>
+      <FloatLabel class="mb-6">
+        <Password
+          inputClass="w-64"
+          id="password"
+          v-model="loginData.password"
+          @keypress.enter="tryLogin"
+          :feedback="false"
+          toggleMask
+        />
+        <label for="password">Password</label>
+      </FloatLabel>
+      <Button severity="contrast" class="mb-4 !px-6" @click="tryLogin" label="Login" />
+      <div class="">
+        Don't have an account? Click <span @click="goToRegister" class="text-primary">here</span> to register
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { GoogleLogin } from 'vue3-google-login';
 declare const window: any;
 declare const FB: any;
-import { onBeforeMount, reactive } from 'vue';
+import { useDeviceType } from '@/composables/useDeviceType';
+import { onBeforeMount, reactive, ref } from 'vue';
 import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';
 import Password from 'primevue/password';
@@ -46,23 +83,28 @@ import { useAuthApi } from '@/api/auth/authApi';
 const userStore = useUserStore();
 const router = useRouter();
 const authApi = useAuthApi();
+const { isMobile } = useDeviceType();
 
 const loginData = reactive({
-  username: '',
+  email: '',
   password: ''
 });
 
+const mobileSocial = ref(true);
+
 const goToForgotPassword = () => {
-  console.log(1)
   router.push('/forgot-password');
 };
 
+const goToRegister = () => {
+  router.push('/register');
+};
+
 const tryLogin = async () => {
-  const response = await authApi.login(loginData.username, loginData.password);
+  const response = await authApi.login(loginData.email, loginData.password);
   if (response.accessToken) {
     await userStore.setUserAccessToken(response.accessToken);
   }
-  router.push('/');
 };
 
 if (localStorage.getItem('JWT')) {
@@ -130,3 +172,12 @@ onBeforeMount(async () => {
   loadFacebookSDK();
 });
 </script>
+
+<style scoped>
+.mobile-background {
+  background-image: url('../../assets/images/auth_background.png');
+  background-size: cover; /* Adjust as needed */
+  background-position: center; /* Adjust as needed */
+  background-repeat: no-repeat; /* Adjust as needed */
+}
+</style>

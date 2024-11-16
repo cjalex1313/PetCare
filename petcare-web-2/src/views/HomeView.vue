@@ -8,6 +8,7 @@ import type { MenuItem } from 'primevue/menuitem';
 import { PetType } from '@/types/petType';
 import AddPetDialog from '@/components/pets/AddPetDialog.vue';
 import type { PetDTO } from '@/types/dtos/petDTO';
+import NavBar from "@/components/layout/NavBar.vue";
 
 const petsApi = usePetsApi();
 
@@ -64,24 +65,29 @@ const handlePetAdded = async () => {
 
 <template>
   <div>
-    <main>
-      <div class="flex justify-between mb-4">
-        <div class="text-3xl font-semibold">Your pets</div>
-        <div>
-          <Button type="button" @click="toggleAdd" aria-haspopup="true" aria-controls="add_menu"
-            >Add</Button
-          >
-          <Menu ref="menu" id="add_menu" :model="items" :popup="true" />
-        </div>
+    <NavBar />
+    <div class="p-5">
+      <div>
+        <main>
+          <div class="flex justify-between mb-4">
+            <div class="text-3xl font-semibold">Your pets</div>
+            <div>
+              <Button type="button" @click="toggleAdd" aria-haspopup="true" aria-controls="add_menu"
+                >Add</Button
+              >
+              <Menu ref="menu" id="add_menu" :model="items" :popup="true" />
+            </div>
+          </div>
+          <PetList :pets="pets" title="Your pets" />
+        </main>
+        <AddPetDialog
+          @close="addPetDialogVisible = false"
+          @saved="handlePetAdded"
+          :visible="addPetDialogVisible"
+          :header="addPetHeader"
+          :petType="addPetType"
+        />
       </div>
-      <PetList :pets="pets" title="Your pets" />
-    </main>
-    <AddPetDialog
-      @close="addPetDialogVisible = false"
-      @saved="handlePetAdded"
-      :visible="addPetDialogVisible"
-      :header="addPetHeader"
-      :petType="addPetType"
-    />
+    </div>
   </div>
 </template>

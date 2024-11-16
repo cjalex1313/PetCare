@@ -6,20 +6,18 @@ import type { Profile } from '../../types/profile';
 export function useAuthApi() {
   const { baseApi } = useBaseApi();
 
-  const login = async (username: string, password: string): Promise<LoginResult> => {
+  const login = async (email: string, password: string): Promise<LoginResult> => {
     const response = await baseApi.post<LoginResult>('/Auth/Login', {
-      username,
+      email,
       password
     });
     return response.data;
   };
   const register = async (
-    username: string,
     password: string,
     email: string
   ): Promise<BaseResponse> => {
     const response = await baseApi.post<BaseResponse>('/Auth/Register', {
-      username,
       password,
       email
     });
@@ -51,6 +49,13 @@ export function useAuthApi() {
     return response.data;
   };
 
+  const setUserNames = async (firstName: string, lastName: string | null): Promise<void> => {
+    await baseApi.put('/Auth/SetUserNames', {
+      firstName,
+      lastName
+    });
+  };
+
   const facebookLogin = async (accessToken: string): Promise<LoginResult> => {
     const response = await baseApi.post<LoginResult>('/Auth/facebook-login', {
       accessToken
@@ -64,5 +69,5 @@ export function useAuthApi() {
     return response.data;
   }
 
-  return { login, register, confirmAccount, getProfile, facebookLogin, googleLogin, forgotPasswordRequest, resetPasswrod };
+  return { login, register, confirmAccount, getProfile, facebookLogin, googleLogin, forgotPasswordRequest, resetPasswrod, setUserNames };
 }

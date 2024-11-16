@@ -29,8 +29,8 @@ namespace PetCare.BusinessLogic.Services
     {
         Task EnsureAdminExists();
         Task EnsureRolesExistInDb();
-        Task<JwtSecurityToken> Login(string username, string password);
-        Task<string> GenerateRefreshToken(string username);
+        Task<JwtSecurityToken> Login(string email, string password);
+        Task<string> GenerateRefreshToken(string email);
         string GetUsernameFromExpiredToken(string token);
         Task<string> RefreshAccessToken(string username, string refreshToken);
         Task<IList<IdentityUser>> GetUsers();
@@ -42,6 +42,8 @@ namespace PetCare.BusinessLogic.Services
         Task SendForgotPasswordEmail(string email);
         Task ResetPasswordAsync(Guid userId, string token, string newPassword);
         Task ChangePassword(string userId, string currentPassword, string newPassword);
+        Task<UserProfile?> GetUserProfile(ClaimsPrincipal user);
+        Task SetUserNames(ClaimsPrincipal user, UserNamesDto userNames);
     }
     internal class AuthService : IAuthService
     {
@@ -127,12 +129,12 @@ namespace PetCare.BusinessLogic.Services
             return token;
         }
 
-        public async Task<JwtSecurityToken> Login(string username, string password)
+        public async Task<JwtSecurityToken> Login(string email, string password)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                throw new LoginUserNotFoundException(username);
+                throw new LoginUserNotFoundException(email);
             }
             var loginAttempt = await _userManager.CheckPasswordAsync(user, password);
             if (!loginAttempt)
@@ -142,7 +144,6 @@ namespace PetCare.BusinessLogic.Services
 
             var authClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, username),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -278,6 +279,36 @@ namespace PetCare.BusinessLogic.Services
             }
         }
 
+        public async Task<UserProfile?> GetUserProfile(ClaimsPrincipal user)
+        {
+            var dbUser = await _userManager.GetUserAsync(user);
+            var userProfile = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.UserId == dbUser!.Id);
+            return userProfile;
+        }
+
+        public async Task SetUserNames(ClaimsPrincipal user, UserNamesDto userNames)
+        {
+            var dbUser = await _userManager.GetUserAsync(user);
+            var userProfile = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.UserId == dbUser!.Id);
+            if (userProfile == null)
+            {
+                userProfile = new UserProfile()
+                {
+                    UserId = dbUser!.Id,
+                    FirstName = userNames.FirstName,
+                    LastName = userNames.LastName,
+                };
+                _dbContext.UserProfiles.Add(userProfile);
+            }
+            else
+            {
+                userProfile.FirstName = userNames.FirstName;
+                userProfile.LastName = userNames.LastName;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
         private async Task AddRoleToUser(IdentityUser identityUser, string role)
         {
             var roleResult = await _userManager.AddToRoleAsync(identityUser, role);
@@ -338,7 +369,7 @@ namespace PetCare.BusinessLogic.Services
             return identityUser;
         }
 
-        public async Task<string> GenerateRefreshToken(string username)
+        public async Task<string> GenerateRefreshToken(string email)
         {
             var randomNumber = new byte[32];
             string refreshToken = "";
@@ -347,7 +378,7 @@ namespace PetCare.BusinessLogic.Services
                 rng.GetBytes(randomNumber);
                 refreshToken = Convert.ToBase64String(randomNumber);
             }
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
             {
@@ -436,20 +467,14 @@ namespace PetCare.BusinessLogic.Services
         public async Task RegisterUser(RegisterRequest registerRequest)
         {
             var email = registerRequest.Email;
-            var username = registerRequest.Username;
             var password = registerRequest.Password;
-            var user = await _userManager.FindByNameAsync(username);
-            if (user != null)
-            {
-                throw new UsernameAlreadyExistsException(username);
-            }
-            user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
                 throw new EmailAlreadyExistsException(email);
             }
-            var identityAdmin = await AddUser(username, email, password);
-            await AddRoleToUser(identityAdmin, Roles.User);
+            var identityUser = await AddUser(email, email, password);
+            await AddRoleToUser(identityUser, Roles.User);
         }
 
         public async Task<FacebookAuthResult> FacebookLogin(string accessToken)

@@ -8,6 +8,5 @@ namespace PetCare.Shared.DTOs.Auth;
 public class RegisterRequest : BaseRequest
 {
     public required string Email { get; set; }
-    public required string Username { get; set; }
     public required string Password { get; set; }
 }

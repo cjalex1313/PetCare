@@ -74,4 +74,12 @@ public static class EntityMappings
         entity.Property(e => e.GoogleEmail).HasMaxLength(256);
         entity.HasIndex(e => e.GoogleEmail).IsUnique();
     }
+
+    public static void MapUserProfile(EntityTypeBuilder<UserProfile> entity)
+    {
+        entity.ToTable("UserProfiles");
+        entity.HasKey(e => e.UserId);
+        entity.Property(e => e.FirstName).HasMaxLength(64).IsRequired();
+        entity.Property(e => e.LastName).HasMaxLength(64);
+    }
 }

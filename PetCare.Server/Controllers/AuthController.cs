@@ -8,6 +8,7 @@ using PetCare.Shared.DTOs.Auth;
 using PetCare.Shared.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using PetCare.Shared.Entities.Auth;
 
 namespace PetCare.Server.Controllers
 {
@@ -25,9 +26,9 @@ namespace PetCare.Server.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<LoginResult>> Login([FromBody] LoginRequest loginRequest)
         {
-            var token = await _authService.Login(loginRequest.Username, loginRequest.Password);
+            var token = await _authService.Login(loginRequest.Email, loginRequest.Password);
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-            var refreshToken = await _authService.GenerateRefreshToken(loginRequest.Username);
+            var refreshToken = await _authService.GenerateRefreshToken(loginRequest.Email);
             LoginResult response = new LoginResult()
             {
                 AccessToken = tokenString,
@@ -61,7 +62,7 @@ namespace PetCare.Server.Controllers
             }
             var token = await _authService.GetAccessToken(user.User);
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-            var refreshToken = await _authService.GenerateRefreshToken(user.User.UserName ?? throw new InvalidOperationException());
+            var refreshToken = await _authService.GenerateRefreshToken(user.User.Email ?? throw new InvalidOperationException());
             return Ok(new LoginResult()
             {
                 AccessToken = tokenString,
@@ -94,23 +95,39 @@ namespace PetCare.Server.Controllers
 
         [HttpGet("Profile")]
         [Authorize]
-        public ActionResult<UserProfile> GetUserProfile()
+        public async Task<ActionResult<UserProfileDto>> GetUserProfile()
         {
             if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
                 return Unauthorized();
             }
-            var username = User.Identity.Name;
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
-            if (email == null || username == null) {
+            if (email == null) {
                 throw new BaseException("Token does not contain username and email claims");
             }
-            var response = new UserProfile()
+            var response = new UserProfileDto()
             {
                 Email = email,
-                Username = username
             };
+            UserProfile? userProfile = await _authService.GetUserProfile(User);
+            if (userProfile != null)
+            {
+                response.FirstName = userProfile.FirstName;
+                response.LastName = userProfile.LastName;
+            }
             return Ok(response);
+        }
+
+        [HttpPut("SetUserNames")]
+        [Authorize]
+        public async Task<ActionResult> SetUserNames([FromBody] UserNamesDto userNames)
+        {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return Unauthorized();
+            }
+            await _authService.SetUserNames(User, userNames);
+            return Ok();
         }
 
         [HttpGet("Users")]
