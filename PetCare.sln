@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{0B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCare.Email", "PetCare.Email\PetCare.Email.csproj", "{191322B4-FBBD-4CFA-9F89-3979DE8A4966}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCare.FileService", "PetCare.FileService\PetCare.FileService.csproj", "{8DFEEE95-7779-4B88-9928-089A5D2DC890}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,12 +43,17 @@ Global
 		{191322B4-FBBD-4CFA-9F89-3979DE8A4966}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{191322B4-FBBD-4CFA-9F89-3979DE8A4966}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{191322B4-FBBD-4CFA-9F89-3979DE8A4966}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DFEEE95-7779-4B88-9928-089A5D2DC890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DFEEE95-7779-4B88-9928-089A5D2DC890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DFEEE95-7779-4B88-9928-089A5D2DC890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DFEEE95-7779-4B88-9928-089A5D2DC890}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{191322B4-FBBD-4CFA-9F89-3979DE8A4966} = {0B0D843C-17FB-4A20-A412-4E7478DB6D98}
+		{8DFEEE95-7779-4B88-9928-089A5D2DC890} = {0B0D843C-17FB-4A20-A412-4E7478DB6D98}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E0C6F14C-CD5B-4249-BBCB-3FEC41D49A61}
