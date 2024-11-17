@@ -56,6 +56,11 @@ const router = createRouter({
       path: '/set-forgot-password',
       name: 'set-forgot-password',
       component: () => import('@/views/auth/SetForgotPasswordView.vue')
+    },
+    {
+      path: '/user-profile',
+      name: 'user-profile',
+      component: () => import('@/views/UserProfileView.vue')
     }
   ]
 });

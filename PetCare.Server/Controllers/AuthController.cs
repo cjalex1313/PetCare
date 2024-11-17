@@ -118,6 +118,14 @@ namespace PetCare.Server.Controllers
             return Ok(response);
         }
 
+        [HttpPatch("Profile")]
+        [Authorize]
+        public async Task<ActionResult<UserProfileDto>> UpdateUserProfile([FromBody] UpdateUserProfileDto userProfileDto)
+        {
+            await _authService.UpdateUserProfile(userProfileDto, User);
+            return await GetUserProfile();
+        }
+
         [HttpPut("SetUserNames")]
         [Authorize]
         public async Task<ActionResult> SetUserNames([FromBody] UserNamesDto userNames)

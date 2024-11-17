@@ -65,7 +65,7 @@ const trySetPassword = async () => {
   loading.value = true;
   try {
     // await authApi.forgotPasswordRequest(email.value);
-    await authApi.resetPasswrod(
+    await authApi.resetPassword(
       route.query.userId as string,
       route.query.token as string,
       password.value

@@ -2,6 +2,7 @@ import { useBaseApi } from '../baseApi';
 import type { BaseResponse } from '../../types/baseResponse';
 import type { LoginResult } from '../../types/loginResult';
 import type { Profile } from '../../types/profile';
+import type { IUpdateUserProfileDto } from "@/types/dtos";
 
 export function useAuthApi() {
   const { baseApi } = useBaseApi();
@@ -31,7 +32,7 @@ export function useAuthApi() {
     return response.data;
   };
 
-  const resetPasswrod = async (userId: string, token: string, password: string): Promise<void> => {
+  const resetPassword = async (userId: string, token: string, password: string): Promise<void> => {
     await baseApi.post('/Auth/ResetPassword', {
       userId,
       token,
@@ -62,6 +63,12 @@ export function useAuthApi() {
     });
     return response.data;
   };
+
+  const updateProfile = async (updateUserProfileDto: IUpdateUserProfileDto): Promise<Profile> => {
+    const response = await baseApi.patch<Profile>('/Auth/Profile', updateUserProfileDto);
+    return response.data;
+  }
+
   const googleLogin = async (idToken: string): Promise<LoginResult> => {
     const response = await baseApi.post<LoginResult>('/Auth/google-login',  {
       idToken
@@ -69,5 +76,5 @@ export function useAuthApi() {
     return response.data;
   }
 
-  return { login, register, confirmAccount, getProfile, facebookLogin, googleLogin, forgotPasswordRequest, resetPasswrod, setUserNames };
+  return { login, register, confirmAccount, getProfile, facebookLogin, googleLogin, forgotPasswordRequest, resetPassword, setUserNames, updateProfile };
 }

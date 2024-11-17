@@ -80,13 +80,16 @@
               >
                 <span class="absolute -inset-1.5"></span>
                 <span class="sr-only">Open user menu</span>
-<!--                <img-->
-<!--                  class="h-8 w-8 rounded-full"-->
-<!--                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"-->
-<!--                  alt=""-->
-<!--                />-->
-                <div v-if="profile && profile.firstName" class="h-8 w-8 rounded-full bg-gray-400 flex items-center justify-center text-white text-lg font-bold">
-                  {{profile.firstName[0]}}
+                <!--                <img-->
+                <!--                  class="h-8 w-8 rounded-full"-->
+                <!--                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"-->
+                <!--                  alt=""-->
+                <!--                />-->
+                <div
+                  v-if="profile && profile.firstName"
+                  class="h-8 w-8 rounded-full bg-gray-400 flex items-center justify-center text-white text-lg font-bold"
+                >
+                  {{ profile.firstName[0] }}
                 </div>
               </button>
             </div>
@@ -110,11 +113,17 @@
                 tabindex="-1"
               >
                 <RouterLink
+                  to="/user-profile"
+                  class="block px-4 py-2 text-sm text-gray-700"
+                  role="menuitem"
+                  tabindex="-1"
+                  >Profile</RouterLink
+                >
+                <RouterLink
                   to="/login"
                   class="block px-4 py-2 text-sm text-gray-700"
                   role="menuitem"
                   tabindex="-1"
-                  id="user-menu-item-2"
                   >Sign out</RouterLink
                 >
               </div>
@@ -151,7 +160,7 @@
 <script setup lang="ts">
 import { OnClickOutside } from '@vueuse/components';
 import { ref } from 'vue';
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from '@/stores/user';
 
 const showContextMenu = ref<boolean>(false);
 const mobileMenuOpen = ref<boolean>(false);

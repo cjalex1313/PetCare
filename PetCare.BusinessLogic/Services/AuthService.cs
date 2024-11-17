@@ -44,6 +44,7 @@ namespace PetCare.BusinessLogic.Services
         Task ChangePassword(string userId, string currentPassword, string newPassword);
         Task<UserProfile?> GetUserProfile(ClaimsPrincipal user);
         Task SetUserNames(ClaimsPrincipal user, UserNamesDto userNames);
+        Task UpdateUserProfile(UpdateUserProfileDto userProfileDto, ClaimsPrincipal user);
     }
     internal class AuthService : IAuthService
     {
@@ -306,6 +307,28 @@ namespace PetCare.BusinessLogic.Services
                 userProfile.LastName = userNames.LastName;
             }
 
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserProfile(UpdateUserProfileDto userProfileDto, ClaimsPrincipal user)
+        {
+            var dbUser = await _userManager.GetUserAsync(user);
+            var userProfile = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.UserId == dbUser!.Id);
+            if (userProfile == null)
+            {
+                userProfile = new UserProfile()
+                {
+                    UserId = dbUser!.Id,
+                    FirstName = userProfileDto.FirstName,
+                    LastName = userProfileDto.LastName,
+                };
+                _dbContext.UserProfiles.Add(userProfile);
+            }
+            else
+            {
+                userProfile.FirstName = userProfileDto.FirstName;
+                userProfile.LastName = userProfileDto.LastName;
+            }
             await _dbContext.SaveChangesAsync();
         }
 
