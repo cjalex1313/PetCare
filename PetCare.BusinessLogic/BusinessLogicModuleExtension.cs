@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PetCare.BusinessLogic.Services;
 using PetCare.DataAccess;
 using PetCare.Email;
+using PetCare.FileService;
 
 namespace PetCare.BusinessLogic
 {
@@ -12,6 +13,7 @@ namespace PetCare.BusinessLogic
         {
             services.AddDataAccess(configuration);
             services.AddEmailModule(configuration);
+            services.AddFileSystemModule(configuration);
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IPetService, PetService>();
             services.AddScoped<ICatsService, CatsService>();

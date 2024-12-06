@@ -2,6 +2,16 @@
   <div>
     <NavBar />
     <div v-if="loaded" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8">
+      <h2 class="text-base/7 font-semibold text-gray-900">Profile Information</h2>
+      <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="col-span-full">
+          <label for="photo" class="block text-sm/6 font-medium text-gray-900">Photo</label>
+          <div class="mt-2 flex items-center gap-x-3">
+            <UserAvatar :placeholder-letter="profileData.firstName[0]" class="!w-12 !h-12" />
+            <FileUpload @select="onFileSelect" mode="basic" customUpload auto accept="image/*" />
+          </div>
+        </div>
+      </div>
       <h2 class="text-base/7 font-semibold text-gray-900">Personal Information</h2>
       <p class="mt-1 text-sm/6 text-gray-600">
         Use a permanent address where you can receive mail.
@@ -34,9 +44,11 @@ import NavBar from '@/components/layout/NavBar.vue';
 import FloatLabel from 'primevue/floatlabel';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import FileUpload from 'primevue/fileupload';
 import { useAuthApi } from '@/api/auth/authApi';
 import { onBeforeMount, reactive, ref } from 'vue';
 import { useToast } from "primevue/usetoast";
+import UserAvatar from "@/components/user/UserAvatar.vue";
 
 const authApi = useAuthApi();
 const toast = useToast();
@@ -53,6 +65,10 @@ const loadData = async () => {
   profileData.firstName = profileResponse.firstName ?? '';
   profileData.lastName = profileResponse.lastName ?? '';
 };
+
+const onFileSelect = (event) => {
+  console.log(event.files)
+}
 
 const saveProfileDat = async () => {
   await authApi.updateProfile({

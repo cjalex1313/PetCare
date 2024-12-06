@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PetCare.DataAccess\PetCare.DataAccess.csproj" />
     <ProjectReference Include="..\PetCare.Email\PetCare.Email.csproj" />
+    <ProjectReference Include="..\PetCare.FileService\PetCare.FileService.csproj" />
   </ItemGroup>
 
 </Project>
