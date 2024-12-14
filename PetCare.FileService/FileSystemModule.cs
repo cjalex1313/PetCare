@@ -14,5 +14,6 @@ public static class FileSystemModule
             throw new BaseException("File System Configuration is missing");
         }
         services.AddSingleton<FileSystemConfig>(fileSystemConfiguration);
+        services.AddScoped<IFileService, FileService>();
     }
 }
